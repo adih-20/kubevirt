@@ -30,6 +30,7 @@ import (
 
 	"kubevirt.io/kubevirt/pkg/hooks"
 	"kubevirt.io/kubevirt/pkg/util"
+	virtlauncher "kubevirt.io/kubevirt/pkg/virt-launcher"
 	"kubevirt.io/kubevirt/pkg/virt-launcher/virtwrap/api"
 	"kubevirt.io/kubevirt/pkg/virt-launcher/virtwrap/cli"
 )
@@ -431,7 +432,7 @@ func NewDomainFromName(name string, vmiUID types.UID) *api.Domain {
 	return domain
 }
 
-func configureQemuConf(qemuFilename string) (err error) {
+func configureQemuConf(qemuFilename string, config *virtlauncher.VirtLauncherConfig) (err error) {
 	qemuConf, err := os.OpenFile(qemuFilename, os.O_APPEND|os.O_WRONLY, 0644)
 	if err != nil {
 		return err
@@ -446,15 +447,15 @@ func configureQemuConf(qemuFilename string) (err error) {
 		return err
 	}
 
-	if debugLogsStr, ok := os.LookupEnv("VIRTIOFSD_DEBUG_LOGS"); ok && (debugLogsStr == "1") {
+	if config.VirtiofsdDebugLogs {
 		_, err = qemuConf.WriteString("virtiofsd_debug = 1\n")
 		if err != nil {
 			return err
 		}
 	}
 
-	if pathsStr, ok := os.LookupEnv(services.ENV_VAR_SHARED_FILESYSTEM_PATHS); ok {
-		paths := strings.Split(pathsStr, ":")
+	if config.SharedFilesystemPaths != "" {
+		paths := strings.Split(config.SharedFilesystemPaths, ":")
 		formatted := strings.Join(paths, "\", \"")
 		sharedFsEntry := fmt.Sprintf("shared_filesystems = [ \"%s\" ]\n", formatted)
 		_, err = qemuConf.WriteString(sharedFsEntry)
@@ -482,7 +483,7 @@ func copyFile(from, to string) error {
 	return err
 }
 
-func (l LibvirtWrapper) SetupLibvirt(customLogFilters *string) (err error) {
+func (l LibvirtWrapper) SetupLibvirt(customLogFilters *string, config *virtlauncher.VirtLauncherConfig) (err error) {
 	runtimeQemuConfPath := qemuConfPath
 	if !l.root() {
 		runtimeQemuConfPath = qemuNonRootConfPath
@@ -495,7 +496,7 @@ func (l LibvirtWrapper) SetupLibvirt(customLogFilters *string) (err error) {
 		}
 	}
 
-	if err := configureQemuConf(runtimeQemuConfPath); err != nil {
+	if err := configureQemuConf(runtimeQemuConfPath, config); err != nil {
 		return err
 	}
 
@@ -505,12 +506,11 @@ func (l LibvirtWrapper) SetupLibvirt(customLogFilters *string) (err error) {
 	}
 
 	var libvirtLogVerbosityEnvVar *string
-	if envVarValue, envVarDefined := os.LookupEnv(services.ENV_VAR_VIRT_LAUNCHER_LOG_VERBOSITY); envVarDefined {
-		libvirtLogVerbosityEnvVar = &envVarValue
+	if config.LogVerbosity != "" {
+		libvirtLogVerbosityEnvVar = &config.LogVerbosity
 	}
-	_, libvirtDebugLogsEnvVarDefined := os.LookupEnv(services.ENV_VAR_LIBVIRT_DEBUG_LOGS)
 
-	if logFilters, enableDebugLogs := getLibvirtLogFilters(customLogFilters, libvirtLogVerbosityEnvVar, libvirtDebugLogsEnvVarDefined); enableDebugLogs {
+	if logFilters, enableDebugLogs := getLibvirtLogFilters(customLogFilters, libvirtLogVerbosityEnvVar, config.LibvirtDebugLogs); enableDebugLogs {
 		virtqemudConf, err := os.OpenFile(runtimeVirtqemudConfPath, os.O_APPEND|os.O_WRONLY, 0644)
 		if err != nil {
 			return err

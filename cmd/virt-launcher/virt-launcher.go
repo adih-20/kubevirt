@@ -65,6 +65,42 @@ import (
 
 const defaultStartTimeout = 3 * time.Minute
 
+type VirtLauncherConfig = virtlauncher.VirtLauncherConfig
+
+func readVirtLauncherConfig() *VirtLauncherConfig {
+	config := &VirtLauncherConfig{}
+
+	if verbosityStr, ok := os.LookupEnv("VIRT_LAUNCHER_LOG_VERBOSITY"); ok {
+		config.LogVerbosity = verbosityStr
+	}
+
+	if debugLogsStr, ok := os.LookupEnv("LIBVIRT_DEBUG_LOGS"); ok && debugLogsStr == "1" {
+		config.LibvirtDebugLogs = true
+	}
+
+	if debugLogsStr, ok := os.LookupEnv("VIRTIOFSD_DEBUG_LOGS"); ok && debugLogsStr == "1" {
+		config.VirtiofsdDebugLogs = true
+	}
+
+	if pathsStr, ok := os.LookupEnv("SHARED_FILESYSTEM_PATHS"); ok {
+		config.SharedFilesystemPaths = pathsStr
+	}
+
+	if vmiStr, ok := os.LookupEnv("STANDALONE_VMI"); ok {
+		config.StandaloneVMI = vmiStr
+	}
+
+	if signalStr, ok := os.LookupEnv("VIRT_LAUNCHER_TARGET_POD_EXIT_SIGNAL"); ok {
+		config.TargetPodExitSignal = signalStr
+	}
+
+	if podName, ok := os.LookupEnv("POD_NAME"); ok {
+		config.PodName = podName
+	}
+
+	return config
+}
+
 func init() {
 	// must registry the event impl before doing anything else.
 	libvirt.EventRegisterDefaultImpl()
@@ -81,8 +117,9 @@ func markReady() {
 func startCmdServer(socketPath string,
 	domainManager virtwrap.DomainManager,
 	stopChan chan struct{},
-	options *cmdserver.ServerOptions) chan struct{} {
-	done, err := cmdserver.RunServer(socketPath, domainManager, stopChan, options)
+	options *cmdserver.ServerOptions,
+	config *virtlauncher.VirtLauncherConfig) chan struct{} {
+	done, err := cmdserver.RunServer(socketPath, domainManager, stopChan, options, config)
 	if err != nil {
 		log.Log.Reason(err).Error("Failed to start virt-launcher cmd server")
 		panic(err)
@@ -365,13 +402,16 @@ func main() {
 
 	log.InitializeLogging("virt-launcher")
 
-	// check if virt-launcher verbosity should be changed
-	if verbosityStr, ok := os.LookupEnv("VIRT_LAUNCHER_LOG_VERBOSITY"); ok {
-		if verbosity, err := strconv.Atoi(verbosityStr); err == nil {
+	// Read all environment variables at the top level
+	config := readVirtLauncherConfig()
+
+	// Set log verbosity if specified
+	if config.LogVerbosity != "" {
+		if verbosity, err := strconv.Atoi(config.LogVerbosity); err == nil {
 			log.Log.SetVerbosityLevel(verbosity)
 			log.Log.V(2).Infof("set log verbosity to %d", verbosity)
 		} else {
-			log.Log.Warningf("failed to set log verbosity. The value of logVerbosity label should be an integer, got %s instead.", verbosityStr)
+			log.Log.Warningf("failed to set log verbosity. The value of logVerbosity label should be an integer, got %s instead.", config.LogVerbosity)
 		}
 	}
 
@@ -407,7 +447,7 @@ func main() {
 	stopChan := make(chan struct{})
 
 	l := util.NewLibvirtWrapper(*runWithNonRoot)
-	err = l.SetupLibvirt(libvirtLogFilters)
+	err = l.SetupLibvirt(libvirtLogFilters, config)
 	if err != nil {
 		panic(err)
 	}
@@ -429,7 +469,7 @@ func main() {
 	metadataCache := metadata.NewCache()
 
 	signalStopChan := make(chan struct{})
-	domainManager, err := virtwrap.NewLibvirtDomainManager(domainConn, *virtShareDir, *ephemeralDiskDir, &agentStore, *ovmfPath, ephemeralDiskCreator, metadataCache, signalStopChan, *diskMemoryLimitBytes, util.GetPodCPUSet, *imageVolumeEnabled)
+	domainManager, err := virtwrap.NewLibvirtDomainManager(domainConn, *virtShareDir, *ephemeralDiskDir, &agentStore, *ovmfPath, ephemeralDiskCreator, metadataCache, signalStopChan, *diskMemoryLimitBytes, util.GetPodCPUSet, *imageVolumeEnabled, config)
 	if err != nil {
 		panic(err)
 	}
@@ -439,7 +479,7 @@ func main() {
 	// to start/stop virtual machines
 	options := cmdserver.NewServerOptions(*allowEmulation)
 	cmdclient.SetBaseDir(*virtShareDir)
-	cmdServerDone := startCmdServer(cmdclient.UninitializedSocketOnGuest(), domainManager, stopChan, options)
+	cmdServerDone := startCmdServer(cmdclient.UninitializedSocketOnGuest(), domainManager, stopChan, options, config)
 
 	gracefulShutdownCallback := func() {
 		domainManager.MarkGracefulShutdownVMI()
@@ -481,7 +521,7 @@ func main() {
 	// managing virtual machines.
 	markReady()
 
-	standalone.HandleStandaloneMode(domainManager)
+	standalone.HandleStandaloneMode(domainManager, config)
 	domain := waitForDomainUUID(*qemuTimeout, events, signalStopChan, domainManager)
 	if domain != nil {
 		var pidDir string

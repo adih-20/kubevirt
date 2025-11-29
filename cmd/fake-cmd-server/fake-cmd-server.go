@@ -10,6 +10,7 @@ import (
 	"kubevirt.io/client-go/log"
 
 	cmdclient "kubevirt.io/kubevirt/pkg/virt-handler/cmd-client"
+	virtlauncher "kubevirt.io/kubevirt/pkg/virt-launcher"
 	"kubevirt.io/kubevirt/pkg/virt-launcher/virtwrap"
 	"kubevirt.io/kubevirt/pkg/virt-launcher/virtwrap/agent"
 	cmdserver "kubevirt.io/kubevirt/pkg/virt-launcher/virtwrap/cmd-server"
@@ -38,7 +39,7 @@ func main() {
 		return "success", nil
 	})
 	log.Log.Info("running fake server")
-	done, err := cmdserver.RunServer(*socket, domainManager, stopChan, options)
+	done, err := cmdserver.RunServer(*socket, domainManager, stopChan, options, &virtlauncher.VirtLauncherConfig{})
 	if err != nil {
 		log.Log.Reason(err).Critical("running cmd server")
 	}

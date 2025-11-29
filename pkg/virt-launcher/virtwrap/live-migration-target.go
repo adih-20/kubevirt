@@ -167,7 +167,7 @@ func (l *LibvirtDomainManager) prepareMigrationTarget(
 		}
 	}
 
-	c, err := l.generateConverterContext(vmi, allowEmulation, options, true)
+	c, err := l.generateConverterContext(vmi, allowEmulation, options, true, l.launcherConfig)
 	if err != nil {
 		return fmt.Errorf("Failed to generate libvirt domain from VMI spec: %v", err)
 	}

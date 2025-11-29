@@ -117,6 +117,7 @@ type ConverterContext struct {
 	BochsForEFIGuests               bool
 	SerialConsoleLog                bool
 	DomainAttachmentByInterfaceName map[string]string
+	LogVerbosity                    string
 }
 
 func assignDiskToSCSIController(disk *api.Disk, unit int) {
@@ -1892,7 +1893,8 @@ func Convert_v1_VirtualMachineInstance_To_api_Domain(vmi *v1.VirtualMachineInsta
 	}
 
 	if c.Architecture.ShouldVerboseLogsBeEnabled() {
-		virtLauncherLogVerbosity, err := strconv.Atoi(os.Getenv(services.ENV_VAR_VIRT_LAUNCHER_LOG_VERBOSITY))
+		// Use centralized log verbosity from startup config instead of direct env lookup
+		virtLauncherLogVerbosity, err := strconv.Atoi(c.LogVerbosity)
 		if err == nil && virtLauncherLogVerbosity > services.EXT_LOG_VERBOSITY_THRESHOLD {
 			// isa-debugcon device is only for x86_64
 			initializeQEMUCmdAndQEMUArg(domain)

@@ -36,6 +36,7 @@ import (
 	cmdv1 "kubevirt.io/kubevirt/pkg/handler-launcher-com/cmd/v1"
 	grpcutil "kubevirt.io/kubevirt/pkg/util/net/grpc"
 	cmdclient "kubevirt.io/kubevirt/pkg/virt-handler/cmd-client"
+	virtlauncher "kubevirt.io/kubevirt/pkg/virt-launcher"
 	"kubevirt.io/kubevirt/pkg/virt-launcher/virtwrap"
 	"kubevirt.io/kubevirt/pkg/virt-launcher/virtwrap/agent"
 	launcherErrors "kubevirt.io/kubevirt/pkg/virt-launcher/virtwrap/errors"
@@ -56,6 +57,7 @@ func NewServerOptions(allowEmulation bool) *ServerOptions {
 type Launcher struct {
 	domainManager  virtwrap.DomainManager
 	allowEmulation bool
+	config         *virtlauncher.VirtLauncherConfig
 }
 
 func getVMIFromRequest(request *cmdv1.VMI) (*v1.VirtualMachineInstance, *cmdv1.Response) {
@@ -145,7 +147,7 @@ func (l *Launcher) SignalTargetPodCleanup(_ context.Context, request *cmdv1.VMIR
 		return response, nil
 	}
 
-	myPodName := os.Getenv("POD_NAME")
+	myPodName := l.config.PodName
 
 	if myPodName != "" && vmi.Status.MigrationState != nil && vmi.Status.MigrationState.TargetPod == myPodName {
 		os.Setenv(receivedEarlyExitSignalEnvVar, "")
@@ -619,7 +621,8 @@ func (l *Launcher) GuestPing(ctx context.Context, request *cmdv1.GuestPingReques
 func RunServer(socketPath string,
 	domainManager virtwrap.DomainManager,
 	stopChan chan struct{},
-	options *ServerOptions) (chan struct{}, error) {
+	options *ServerOptions,
+	config *virtlauncher.VirtLauncherConfig) (chan struct{}, error) {
 
 	allowEmulation := false
 	if options != nil {
@@ -630,6 +633,7 @@ func RunServer(socketPath string,
 	server := &Launcher{
 		domainManager:  domainManager,
 		allowEmulation: allowEmulation,
+		config:         config,
 	}
 	registerInfoServer(grpcServer)
 

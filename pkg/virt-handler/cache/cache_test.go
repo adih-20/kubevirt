@@ -38,6 +38,7 @@ import (
 
 	diskutils "kubevirt.io/kubevirt/pkg/ephemeral-disk-utils"
 	cmdclient "kubevirt.io/kubevirt/pkg/virt-handler/cmd-client"
+	virtlauncher "kubevirt.io/kubevirt/pkg/virt-launcher"
 	notifyclient "kubevirt.io/kubevirt/pkg/virt-launcher/notify-client"
 	"kubevirt.io/kubevirt/pkg/virt-launcher/virtwrap"
 	"kubevirt.io/kubevirt/pkg/virt-launcher/virtwrap/api"
@@ -464,7 +465,7 @@ func runCMDServer(wg *sync.WaitGroup, socketPath string,
 	stopChan chan struct{},
 	options *cmdserver.ServerOptions) {
 	wg.Add(1)
-	done, _ := cmdserver.RunServer(socketPath, domainManager, stopChan, options)
+	done, _ := cmdserver.RunServer(socketPath, domainManager, stopChan, options, &virtlauncher.VirtLauncherConfig{})
 	go func() {
 		<-done
 		wg.Done()

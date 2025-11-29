@@ -57,6 +57,8 @@ import (
 	v1 "kubevirt.io/api/core/v1"
 	"kubevirt.io/client-go/log"
 
+	virtlauncher "kubevirt.io/kubevirt/pkg/virt-launcher"
+
 	cloudinit "kubevirt.io/kubevirt/pkg/cloud-init"
 	"kubevirt.io/kubevirt/pkg/config"
 	containerdisk "kubevirt.io/kubevirt/pkg/container-disk"
@@ -198,6 +200,7 @@ type LibvirtDomainManager struct {
 	domainStatsCache          *virtcache.TimeDefinedCache[*stats.DomainStats]
 	domainDirtyRateStatsCache *virtcache.TimeDefinedCache[*stats.DomainStatsDirtyRate]
 
+	launcherConfig                *virtlauncher.VirtLauncherConfig
 	cpuSetGetter                  func() ([]int, error)
 	imageVolumeFeatureGateEnabled bool
 	setTimeOnce                   sync.Once
@@ -228,14 +231,14 @@ func (s pausedVMIs) contains(uid types.UID) bool {
 
 func NewLibvirtDomainManager(connection cli.Connection, virtShareDir, ephemeralDiskDir string, agentStore *agentpoller.AsyncAgentStore,
 	ovmfPath string, ephemeralDiskCreator ephemeraldisk.EphemeralDiskCreatorInterface, metadataCache *metadata.Cache,
-	stopChan chan struct{}, diskMemoryLimitBytes int64, cpuSetGetter func() ([]int, error), imageVolumeEnabled bool) (DomainManager, error) {
+	stopChan chan struct{}, diskMemoryLimitBytes int64, cpuSetGetter func() ([]int, error), imageVolumeEnabled bool, config *virtlauncher.VirtLauncherConfig) (DomainManager, error) {
 	directIOChecker := converter.NewDirectIOChecker()
-	return newLibvirtDomainManager(connection, virtShareDir, ephemeralDiskDir, agentStore, ovmfPath, ephemeralDiskCreator, directIOChecker, metadataCache, stopChan, diskMemoryLimitBytes, cpuSetGetter, imageVolumeEnabled)
+	return newLibvirtDomainManager(connection, virtShareDir, ephemeralDiskDir, agentStore, ovmfPath, ephemeralDiskCreator, directIOChecker, metadataCache, stopChan, diskMemoryLimitBytes, cpuSetGetter, imageVolumeEnabled, config)
 }
 
 func newLibvirtDomainManager(connection cli.Connection, virtShareDir, ephemeralDiskDir string, agentStore *agentpoller.AsyncAgentStore, ovmfPath string,
 	ephemeralDiskCreator ephemeraldisk.EphemeralDiskCreatorInterface, directIOChecker converter.DirectIOChecker, metadataCache *metadata.Cache,
-	stopChan chan struct{}, diskMemoryLimitBytes int64, cpuSetGetter func() ([]int, error), imageVolumeEnabled bool) (DomainManager, error) {
+	stopChan chan struct{}, diskMemoryLimitBytes int64, cpuSetGetter func() ([]int, error), imageVolumeEnabled bool, config *virtlauncher.VirtLauncherConfig) (DomainManager, error) {
 	manager := LibvirtDomainManager{
 		diskMemoryLimitBytes: diskMemoryLimitBytes,
 		virConn:              connection,
@@ -252,6 +255,7 @@ func newLibvirtDomainManager(connection cli.Connection, virtShareDir, ephemeralD
 		cancelSafetyUnfreezeChan:      make(chan struct{}),
 		migrateInfoStats:              &stats.DomainJobInfo{},
 		metadataCache:                 metadataCache,
+		launcherConfig:                config,
 		cpuSetGetter:                  cpuSetGetter,
 		setTimeOnce:                   sync.Once{},
 		imageVolumeFeatureGateEnabled: imageVolumeEnabled,
@@ -980,7 +984,7 @@ func shouldExpandOffline(disk api.Disk) bool {
 	return true
 }
 
-func (l *LibvirtDomainManager) generateConverterContext(vmi *v1.VirtualMachineInstance, allowEmulation bool, options *cmdv1.VirtualMachineOptions, isMigrationTarget bool) (*converter.ConverterContext, error) {
+func (l *LibvirtDomainManager) generateConverterContext(vmi *v1.VirtualMachineInstance, allowEmulation bool, options *cmdv1.VirtualMachineOptions, isMigrationTarget bool, launcherConfig *virtlauncher.VirtLauncherConfig) (*converter.ConverterContext, error) {
 
 	logger := log.Log.Object(vmi)
 
@@ -1079,6 +1083,7 @@ func (l *LibvirtDomainManager) generateConverterContext(vmi *v1.VirtualMachineIn
 		UseLaunchSecurityPV:   kutil.IsSecureExecutionVMI(vmi),
 		FreePageReporting:     isFreePageReportingEnabled(false, vmi),
 		SerialConsoleLog:      isSerialConsoleLogEnabled(false, vmi),
+		LogVerbosity:          launcherConfig.LogVerbosity,
 	}
 
 	if options != nil {
@@ -1176,7 +1181,7 @@ func (l *LibvirtDomainManager) SyncVMI(vmi *v1.VirtualMachineInstance, allowEmul
 		}
 	}
 
-	c, err := l.generateConverterContext(vmi, allowEmulation, options, false)
+	c, err := l.generateConverterContext(vmi, allowEmulation, options, false, l.launcherConfig)
 	if err != nil {
 		logger.Reason(err).Error("failed to generate libvirt domain from VMI spec")
 		return nil, err

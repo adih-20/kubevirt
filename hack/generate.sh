@@ -170,7 +170,7 @@ rm -rf ${KUBEVIRT_DIR}/staging/src/kubevirt.io/client-go/config
 
 (cd ${KUBEVIRT_DIR}/tools/openapispec/ && go_build)
 
-${KUBEVIRT_DIR}/tools/openapispec/openapispec --dump-api-spec-path ${KUBEVIRT_DIR}/api/openapi-spec/swagger.json
+${KUBEVIRT_DIR}/tools/openapispec/${KUBEVIRT_DIR}/tools/openapispec/openapispec --dump-api-spec-path ${KUBEVIRT_DIR}/api/openapi-spec/swagger.json
 
 (cd ${KUBEVIRT_DIR}/tools/resource-generator/ && go_build)
 (cd ${KUBEVIRT_DIR}/tools/csv-generator/ && go_build)

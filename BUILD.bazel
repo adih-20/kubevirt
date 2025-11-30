@@ -556,6 +556,25 @@ genrule(
     executable = 1,
 )
 
+genrule(
+    name = "generate",
+    srcs = glob([
+        "staging/src/kubevirt.io/api/**/*.go",
+        "hack/generate.sh",
+        "hack/common.sh",
+        "hack/config.sh",
+        "hack/boilerplate/boilerplate.go.txt",
+        "hack/build-go.sh",
+        "hack/gen-proto.sh",
+        "hack/bootstrap-ginkgo.sh",
+        "hack/bazel-race.sh",
+    ]),
+    outs = ["generate_stamp"],
+    cmd = "hack/dockerized ./hack/generate.sh && touch $(location generate_stamp)",
+    local = 1,
+    visibility = ["//visibility:public"],
+)
+
 go_library(
     name = "go_default_library",
     srcs = ["doc.go"],

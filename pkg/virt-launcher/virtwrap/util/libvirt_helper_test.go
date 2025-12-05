@@ -225,6 +225,7 @@ var _ = Describe("LibvirtHelper", func() {
 			SMBios:           &cmdv1.SMBios{},
 			HotplugVolumes:   make(map[string]v1.VolumeStatus),
 			PermanentVolumes: make(map[string]v1.VolumeStatus),
+			LogVerbosity:     os.Getenv(services.ENV_VAR_VIRT_LAUNCHER_LOG_VERBOSITY),
 		}
 		Expect(converter.Convert_v1_VirtualMachineInstance_To_api_Domain(vmi, domain, c)).To(Succeed())
 		api.NewDefaulter(runtime.GOARCH).SetObjectDefaults_Domain(domain)

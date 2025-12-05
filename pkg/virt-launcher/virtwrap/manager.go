@@ -43,6 +43,7 @@ import (
 	"syscall"
 	"time"
 
+	virtlauncher "kubevirt.io/kubevirt/pkg/virt-launcher/env-config"
 	"kubevirt.io/kubevirt/pkg/virt-launcher/virtwrap/device/hostdevice/dra"
 	"kubevirt.io/kubevirt/pkg/virt-launcher/virtwrap/network"
 
@@ -56,8 +57,6 @@ import (
 
 	v1 "kubevirt.io/api/core/v1"
 	"kubevirt.io/client-go/log"
-
-	virtlauncher "kubevirt.io/kubevirt/pkg/virt-launcher"
 
 	cloudinit "kubevirt.io/kubevirt/pkg/cloud-init"
 	"kubevirt.io/kubevirt/pkg/config"

@@ -21,12 +21,13 @@ package standalone_test
 
 import (
 	"fmt"
+	"os"
 
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 	"go.uber.org/mock/gomock"
+	virtlauncher "kubevirt.io/kubevirt/pkg/virt-launcher/env-config"
 
-	virtlauncher "kubevirt.io/kubevirt/pkg/virt-launcher"
 	"kubevirt.io/kubevirt/pkg/virt-launcher/standalone"
 	virtwrap "kubevirt.io/kubevirt/pkg/virt-launcher/virtwrap"
 )
@@ -47,12 +48,15 @@ var _ = Describe("HandleStandaloneMode", func() {
 	})
 
 	It("should do nothing if STANDALONE_VMI env var is not set", func() {
-		config := &virtlauncher.VirtLauncherConfig{}
+		os.Unsetenv("STANDALONE_VMI")
+		config := virtlauncher.ReadVirtLauncherConfig()
 		standalone.HandleStandaloneMode(mockDM, config)
 	})
 
 	It("should panic on invalid JSON in STANDALONE_VMI", func() {
-		config := &virtlauncher.VirtLauncherConfig{StandaloneVMI: "invalid json"}
+		os.Setenv("STANDALONE_VMI", "invalid json")
+		config := virtlauncher.ReadVirtLauncherConfig()
+		defer os.Unsetenv("STANDALONE_VMI")
 
 		Expect(func() {
 			standalone.HandleStandaloneMode(mockDM, config)
@@ -61,7 +65,9 @@ var _ = Describe("HandleStandaloneMode", func() {
 
 	It("should panic if SyncVMI fails", func() {
 		vmiJSON := `{"apiVersion":"kubevirt.io/v1","kind":"VirtualMachineInstance","metadata":{"name":"testvmi"}}`
-		config := &virtlauncher.VirtLauncherConfig{StandaloneVMI: vmiJSON}
+		os.Setenv("STANDALONE_VMI", vmiJSON)
+		config := virtlauncher.ReadVirtLauncherConfig()
+		defer os.Unsetenv("STANDALONE_VMI")
 
 		mockDM.EXPECT().SyncVMI(gomock.Any(), true, nil).Return(nil, fmt.Errorf("sync error"))
 
@@ -72,7 +78,9 @@ var _ = Describe("HandleStandaloneMode", func() {
 
 	It("should succeed with valid JSON and successful SyncVMI", func() {
 		vmiJSON := `{"apiVersion":"kubevirt.io/v1","kind":"VirtualMachineInstance","metadata":{"name":"testvmi"}}`
-		config := &virtlauncher.VirtLauncherConfig{StandaloneVMI: vmiJSON}
+		os.Setenv("STANDALONE_VMI", vmiJSON)
+		config := virtlauncher.ReadVirtLauncherConfig()
+		defer os.Unsetenv("STANDALONE_VMI")
 
 		mockDM.EXPECT().SyncVMI(gomock.Any(), true, nil).Return(nil, nil)
 
@@ -86,7 +94,9 @@ var _ = Describe("HandleStandaloneMode", func() {
 kind: VirtualMachineInstance
 metadata:
   name: testvmi-yaml`
-		config := &virtlauncher.VirtLauncherConfig{StandaloneVMI: vmiYAML}
+		os.Setenv("STANDALONE_VMI", vmiYAML)
+		config := virtlauncher.ReadVirtLauncherConfig()
+		defer os.Unsetenv("STANDALONE_VMI")
 
 		mockDM.EXPECT().SyncVMI(gomock.Any(), true, nil).Return(nil, nil)
 
@@ -96,7 +106,9 @@ metadata:
 	})
 
 	It("should panic on invalid YAML in STANDALONE_VMI", func() {
-		config := &virtlauncher.VirtLauncherConfig{StandaloneVMI: "invalid: yaml: here"}
+		os.Setenv("STANDALONE_VMI", "invalid: yaml: here")
+		config := virtlauncher.ReadVirtLauncherConfig()
+		defer os.Unsetenv("STANDALONE_VMI")
 
 		Expect(func() {
 			standalone.HandleStandaloneMode(mockDM, config)

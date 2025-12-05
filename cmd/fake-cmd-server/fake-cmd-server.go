@@ -6,11 +6,11 @@ import (
 
 	"github.com/spf13/pflag"
 	"go.uber.org/mock/gomock"
+	virtlauncher "kubevirt.io/kubevirt/pkg/virt-launcher/env-config"
 
 	"kubevirt.io/client-go/log"
 
 	cmdclient "kubevirt.io/kubevirt/pkg/virt-handler/cmd-client"
-	virtlauncher "kubevirt.io/kubevirt/pkg/virt-launcher"
 	"kubevirt.io/kubevirt/pkg/virt-launcher/virtwrap"
 	"kubevirt.io/kubevirt/pkg/virt-launcher/virtwrap/agent"
 	cmdserver "kubevirt.io/kubevirt/pkg/virt-launcher/virtwrap/cmd-server"

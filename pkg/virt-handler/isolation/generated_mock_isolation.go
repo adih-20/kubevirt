@@ -15,7 +15,6 @@ import (
 	ps "github.com/mitchellh/go-ps"
 	mountinfo "github.com/moby/sys/mountinfo"
 	gomock "go.uber.org/mock/gomock"
-
 	safepath "kubevirt.io/kubevirt/pkg/safepath"
 )
 

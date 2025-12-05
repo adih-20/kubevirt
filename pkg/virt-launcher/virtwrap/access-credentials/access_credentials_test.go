@@ -38,6 +38,7 @@ import (
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 	"go.uber.org/mock/gomock"
+	"kubevirt.io/kubevirt/pkg/virt-controller/services"
 	"libvirt.org/go/libvirt"
 
 	v1 "kubevirt.io/api/core/v1"
@@ -81,6 +82,7 @@ var _ = Describe("AccessCredentials", func() {
 			VirtualMachine: vmi,
 			AllowEmulation: true,
 			SMBios:         &cmdv1.SMBios{},
+			LogVerbosity:   os.Getenv(services.ENV_VAR_VIRT_LAUNCHER_LOG_VERBOSITY),
 		}
 		Expect(converter.Convert_v1_VirtualMachineInstance_To_api_Domain(vmi, domain, c)).To(Succeed())
 		api.NewDefaulter(runtime.GOARCH).SetObjectDefaults_Domain(domain)

@@ -23,10 +23,12 @@ import (
 	"encoding/json"
 	"encoding/xml"
 	"fmt"
+	"os"
 	"runtime"
 
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
+	"kubevirt.io/kubevirt/pkg/virt-controller/services"
 
 	hooksv1alpha1 "kubevirt.io/kubevirt/pkg/hooks/v1alpha1"
 	"kubevirt.io/kubevirt/pkg/virt-launcher/virtwrap/api"
@@ -51,6 +53,7 @@ var _ = Describe("SMBios sidecar", func() {
 			Architecture:   archconverter.NewConverter(runtime.GOARCH),
 			VirtualMachine: vmi,
 			AllowEmulation: true,
+			LogVerbosity: os.Getenv(services.ENV_VAR_VIRT_LAUNCHER_LOG_VERBOSITY),
 		}
 
 		domain := &api.Domain{}

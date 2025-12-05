@@ -32,6 +32,7 @@ import (
 
 	"github.com/spf13/pflag"
 	"k8s.io/apimachinery/pkg/types"
+	"kubevirt.io/kubevirt/pkg/virt-launcher/env-config"
 	"libvirt.org/go/libvirt"
 
 	"k8s.io/apimachinery/pkg/watch"
@@ -65,42 +66,6 @@ import (
 
 const defaultStartTimeout = 3 * time.Minute
 
-type VirtLauncherConfig = virtlauncher.VirtLauncherConfig
-
-func readVirtLauncherConfig() *VirtLauncherConfig {
-	config := &VirtLauncherConfig{}
-
-	if verbosityStr, ok := os.LookupEnv("VIRT_LAUNCHER_LOG_VERBOSITY"); ok {
-		config.LogVerbosity = verbosityStr
-	}
-
-	if debugLogsStr, ok := os.LookupEnv("LIBVIRT_DEBUG_LOGS"); ok && debugLogsStr == "1" {
-		config.LibvirtDebugLogs = true
-	}
-
-	if debugLogsStr, ok := os.LookupEnv("VIRTIOFSD_DEBUG_LOGS"); ok && debugLogsStr == "1" {
-		config.VirtiofsdDebugLogs = true
-	}
-
-	if pathsStr, ok := os.LookupEnv("SHARED_FILESYSTEM_PATHS"); ok {
-		config.SharedFilesystemPaths = pathsStr
-	}
-
-	if vmiStr, ok := os.LookupEnv("STANDALONE_VMI"); ok {
-		config.StandaloneVMI = vmiStr
-	}
-
-	if signalStr, ok := os.LookupEnv("VIRT_LAUNCHER_TARGET_POD_EXIT_SIGNAL"); ok {
-		config.TargetPodExitSignal = signalStr
-	}
-
-	if podName, ok := os.LookupEnv("POD_NAME"); ok {
-		config.PodName = podName
-	}
-
-	return config
-}
-
 func init() {
 	// must registry the event impl before doing anything else.
 	libvirt.EventRegisterDefaultImpl()
@@ -118,7 +83,7 @@ func startCmdServer(socketPath string,
 	domainManager virtwrap.DomainManager,
 	stopChan chan struct{},
 	options *cmdserver.ServerOptions,
-	config *virtlauncher.VirtLauncherConfig) chan struct{} {
+	config *env_config.VirtLauncherConfig) chan struct{} {
 	done, err := cmdserver.RunServer(socketPath, domainManager, stopChan, options, config)
 	if err != nil {
 		log.Log.Reason(err).Error("Failed to start virt-launcher cmd server")
@@ -403,7 +368,7 @@ func main() {
 	log.InitializeLogging("virt-launcher")
 
 	// Read all environment variables at the top level
-	config := readVirtLauncherConfig()
+	config := env_config.ReadVirtLauncherConfig()
 
 	// Set log verbosity if specified
 	if config.LogVerbosity != "" {

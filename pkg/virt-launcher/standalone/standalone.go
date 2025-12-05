@@ -24,9 +24,9 @@ import (
 
 	v1 "kubevirt.io/api/core/v1"
 	"kubevirt.io/client-go/log"
+	virtlauncher "kubevirt.io/kubevirt/pkg/virt-launcher/env-config"
 	"sigs.k8s.io/yaml"
 
-	virtlauncher "kubevirt.io/kubevirt/pkg/virt-launcher"
 	"kubevirt.io/kubevirt/pkg/virt-launcher/virtwrap"
 )
 

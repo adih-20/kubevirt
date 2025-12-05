@@ -31,6 +31,7 @@ import (
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 	"go.uber.org/mock/gomock"
+	virtlauncher "kubevirt.io/kubevirt/pkg/virt-launcher/env-config"
 
 	"k8s.io/apimachinery/pkg/api/equality"
 	"k8s.io/apimachinery/pkg/watch"
@@ -38,7 +39,6 @@ import (
 
 	diskutils "kubevirt.io/kubevirt/pkg/ephemeral-disk-utils"
 	cmdclient "kubevirt.io/kubevirt/pkg/virt-handler/cmd-client"
-	virtlauncher "kubevirt.io/kubevirt/pkg/virt-launcher"
 	notifyclient "kubevirt.io/kubevirt/pkg/virt-launcher/notify-client"
 	"kubevirt.io/kubevirt/pkg/virt-launcher/virtwrap"
 	"kubevirt.io/kubevirt/pkg/virt-launcher/virtwrap/api"
@@ -465,7 +465,7 @@ func runCMDServer(wg *sync.WaitGroup, socketPath string,
 	stopChan chan struct{},
 	options *cmdserver.ServerOptions) {
 	wg.Add(1)
-	done, _ := cmdserver.RunServer(socketPath, domainManager, stopChan, options, &virtlauncher.VirtLauncherConfig{})
+	done, _ := cmdserver.RunServer(socketPath, domainManager, stopChan, options, virtlauncher.ReadVirtLauncherConfig())
 	go func() {
 		<-done
 		wg.Done()

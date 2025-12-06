@@ -125,6 +125,127 @@ genrule(
     visibility = ["//visibility:public"],
 )
 
+# =============================================================================
+# Code Generation Targets (Cached by Bazel)
+# =============================================================================
+# These genrule targets wrap the code generation tools to enable Bazel caching.
+# When source files don't change, Bazel will use cached outputs instead of
+# regenerating, significantly speeding up subsequent `make generate` runs.
+
+# Generate manifest files
+genrule(
+    name = "generate-kubevirt-priority-class",
+    srcs = [],
+    outs = ["generated-manifests/kubevirt-priority-class.yaml"],
+    cmd = "$(location //tools/resource-generator) --type=priorityclass > $@",
+    tools = ["//tools/resource-generator"],
+    visibility = ["//visibility:public"],
+)
+
+genrule(
+    name = "generate-kv-resource",
+    srcs = [],
+    outs = ["generated-manifests/kv-resource.yaml"],
+    cmd = "$(location //tools/resource-generator) --type=kv > $@",
+    tools = ["//tools/resource-generator"],
+    visibility = ["//visibility:public"],
+)
+
+genrule(
+    name = "generate-kubevirt-network-policies",
+    srcs = [],
+    outs = ["generated-manifests/kubevirt-network-policies.yaml.in"],
+    cmd = "$(location //tools/resource-generator) --type=networkpolicies --namespace='{{.Namespace}}' > $@",
+    tools = ["//tools/resource-generator"],
+    visibility = ["//visibility:public"],
+)
+
+genrule(
+    name = "generate-kubevirt-cr",
+    srcs = [],
+    outs = ["generated-manifests/kubevirt-cr.yaml.in"],
+    cmd = "$(location //tools/resource-generator) --type=kv-cr --namespace='{{.Namespace}}' --pullPolicy='{{.ImagePullPolicy}}' --featureGates='{{.FeatureGates}}' --infraReplicas='{{.InfraReplicas}}' > $@",
+    tools = ["//tools/resource-generator"],
+    visibility = ["//visibility:public"],
+)
+
+genrule(
+    name = "generate-rbac-operator",
+    srcs = [],
+    outs = ["generated-manifests/rbac-operator.authorization.k8s.yaml.in"],
+    cmd = "$(location //tools/resource-generator) --type=operator-rbac --namespace='{{.Namespace}}' > $@",
+    tools = ["//tools/resource-generator"],
+    visibility = ["//visibility:public"],
+)
+
+genrule(
+    name = "generate-operator-csv",
+    srcs = [],
+    outs = ["generated-manifests/operator-csv.yaml.in"],
+    cmd = """
+$(location //tools/csv-generator:csv-generator) \
+    --operatorImageVersion="{{.DockerTag}}" \
+    --csvCreatedAtTimestamp={{.CreatedAt}} \
+    --csvVersion="2222.2222.2222" \
+    --dockerPrefix={{.DockerPrefix}} \
+    --kubevirtLogo={{.KubeVirtLogo}} \
+    --kubeVirtVersion={{.DockerTag}} \
+    --namespace={{.CSVNamespace}} \
+    --pullPolicy={{.ImagePullPolicy}} \
+    --replacesCsvVersion="1111.1111.1111" \
+    --verbosity={{.Verbosity}} | \
+    sed 's/2222.2222.2222/{{.CsvVersion}}/g' | \
+    sed 's/1111.1111.1111/{{.ReplacesCsvVersion}}/g' > $@
+""",
+    tools = ["//tools/csv-generator"],
+    visibility = ["//visibility:public"],
+)
+
+# Generate OpenAPI spec
+genrule(
+    name = "generate-openapi-spec",
+    srcs = [],
+    outs = ["generated-api/swagger.json"],
+    cmd = "$(location //tools/openapispec) --dump-api-spec-path $@",
+    tools = ["//tools/openapispec"],
+    visibility = ["//visibility:public"],
+)
+
+# Generate metrics documentation
+genrule(
+    name = "generate-metrics-doc",
+    srcs = [],
+    outs = ["generated-docs/metrics.md"],
+    cmd = "$(location //tools/doc-generator) > $@",
+    tools = ["//tools/doc-generator"],
+    visibility = ["//visibility:public"],
+)
+
+# Filegroup combining all generated manifests
+filegroup(
+    name = "generated-manifests",
+    srcs = [
+        ":generate-kubevirt-cr",
+        ":generate-kubevirt-network-policies",
+        ":generate-kubevirt-priority-class",
+        ":generate-kv-resource",
+        ":generate-operator-csv",
+        ":generate-rbac-operator",
+    ],
+    visibility = ["//visibility:public"],
+)
+
+# Filegroup combining all generation targets
+filegroup(
+    name = "all-generated",
+    srcs = [
+        ":generate-metrics-doc",
+        ":generate-openapi-spec",
+        ":generated-manifests",
+    ],
+    visibility = ["//visibility:public"],
+)
+
 cc_library(
     name = "libvirt-libs",
     srcs = select({

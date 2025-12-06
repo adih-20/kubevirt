@@ -48,6 +48,15 @@ bazel-test:
 gen-proto:
 	hack/dockerized "DOCKER_PREFIX=${DOCKER_PREFIX} DOCKER_TAG=${DOCKER_TAG} IMAGE_PULL_POLICY=${IMAGE_PULL_POLICY} VERBOSITY=${VERBOSITY} ./hack/gen-proto.sh"
 
+# generate-cached uses Bazel to cache generated manifests, openapi spec, and docs.
+# If the source files haven't changed, Bazel will use cached outputs, making
+# subsequent runs significantly faster.
+generate-cached:
+	hack/dockerized "./hack/sync-generated-from-bazel.sh"
+
+# Full generate target that includes both cached and non-cached generation.
+# The cached parts use Bazel for caching, while other generation steps
+# (like deepcopy-gen, client-gen, etc.) run normally.
 generate:
 	hack/dockerized hack/build-ginkgo.sh
 	hack/dockerized "DOCKER_PREFIX=${DOCKER_PREFIX} DOCKER_TAG=${DOCKER_TAG} IMAGE_PULL_POLICY=${IMAGE_PULL_POLICY} VERBOSITY=${VERBOSITY} ./hack/generate.sh"
@@ -56,9 +65,19 @@ generate:
 	hack/dockerized hack/common-instancetypes/sync.sh
 	./hack/update-generated-api-testdata.sh
 
+# Fast generate target that only regenerates cached parts using Bazel.
+# Use this when you only need to update manifests, openapi spec, or docs.
+generate-fast:
+	hack/dockerized "./hack/sync-generated-from-bazel.sh"
+	SYNC_VENDOR=true hack/dockerized "./hack/bazel-generate.sh && hack/bazel-fmt.sh"
+
 generate-verify: generate
 	./hack/verify-generate.sh
 	./hack/check-for-binaries.sh
+
+# Verify that Bazel-cached generated files are up-to-date
+verify-generated-cached:
+	hack/dockerized "./hack/sync-generated-from-bazel.sh --verify"
 
 apidocs:
 	hack/dockerized "./hack/gen-swagger-doc/gen-swagger-docs.sh v1 html"
@@ -266,4 +285,7 @@ update-generated-api-testdata:
 	lint \
 	lint-metrics \
 	update-generated-api-testdata \
+	generate-cached \
+	generate-fast \
+	verify-generated-cached \
 	$(NULL)

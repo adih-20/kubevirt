@@ -51,6 +51,7 @@ require (
 	github.com/prometheus/common v0.62.0
 	github.com/prometheus/procfs v0.15.1
 	github.com/rhobs/operator-observability-toolkit v0.0.29
+	github.com/robfig/cron/v3 v3.0.1
 	github.com/spf13/cobra v1.9.1
 	github.com/spf13/pflag v1.0.6
 	github.com/vishvananda/netlink v1.3.0

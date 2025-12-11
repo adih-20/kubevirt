@@ -376,3 +376,188 @@ type VirtualMachineRestoreList struct {
 
 	Items []VirtualMachineRestore `json:"items"`
 }
+
+// VirtualMachineSnapshotSchedule defines a schedule for taking snapshots of VirtualMachines
+// +genclient
+// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
+type VirtualMachineSnapshotSchedule struct {
+	metav1.TypeMeta   `json:",inline"`
+	metav1.ObjectMeta `json:"metadata,omitempty"`
+
+	Spec VirtualMachineSnapshotScheduleSpec `json:"spec"`
+
+	// +optional
+	Status *VirtualMachineSnapshotScheduleStatus `json:"status,omitempty"`
+}
+
+// VirtualMachineSnapshotScheduleSpec is the spec for a VirtualMachineSnapshotSchedule resource
+type VirtualMachineSnapshotScheduleSpec struct {
+	// Source is the TypedLocalObjectReference of the VirtualMachine to snapshot.
+	// If specified, takes precedence over VMSelector.
+	// +optional
+	Source *corev1.TypedLocalObjectReference `json:"source,omitempty"`
+
+	// VMSelector is a LabelSelector to select VirtualMachines to snapshot.
+	// Multiple VMs can be selected using this field.
+	// +optional
+	VMSelector *metav1.LabelSelector `json:"vmSelector,omitempty"`
+
+	// Schedule defines the cron expression for when snapshots should be taken.
+	// The schedule is interpreted with respect to the UTC timezone.
+	// Supports standard cron expressions and pre-defined shortcuts:
+	// @hourly, @daily, @weekly, @monthly, @yearly
+	Schedule string `json:"schedule"`
+
+	// Disabled when set to true makes the schedule inactive
+	// +optional
+	Disabled bool `json:"disabled,omitempty"`
+
+	// Retention defines the policy for retaining snapshots
+	// +optional
+	Retention *VirtualMachineSnapshotScheduleRetention `json:"retention,omitempty"`
+
+	// SnapshotTemplate contains settings for the VirtualMachineSnapshots that are created
+	// +optional
+	SnapshotTemplate *VirtualMachineSnapshotTemplateSpec `json:"snapshotTemplate,omitempty"`
+
+	// FailurePolicy defines how to handle snapshot failures
+	// +optional
+	FailurePolicy *ScheduleFailurePolicy `json:"failurePolicy,omitempty"`
+}
+
+// VirtualMachineSnapshotScheduleRetention defines the retention policy for scheduled snapshots
+type VirtualMachineSnapshotScheduleRetention struct {
+	// Expires is the length of time a snapshot should be retained.
+	// Format is a duration string (e.g., "168h" for 1 week, "720h" for 30 days).
+	// When both Expires and MaxCount are set, snapshots are deleted when either
+	// condition is met.
+	// +optional
+	Expires *metav1.Duration `json:"expires,omitempty"`
+
+	// MaxCount is the maximum number of snapshots to retain per VirtualMachine.
+	// When this limit is reached, the oldest snapshot will be deleted.
+	// When both Expires and MaxCount are set, snapshots are deleted when either
+	// condition is met.
+	// +optional
+	MaxCount *int32 `json:"maxCount,omitempty"`
+}
+
+// VirtualMachineSnapshotTemplateSpec contains settings for snapshots created by the schedule
+type VirtualMachineSnapshotTemplateSpec struct {
+	// Labels to add to each VirtualMachineSnapshot
+	// +optional
+	Labels map[string]string `json:"labels,omitempty"`
+
+	// Annotations to add to each VirtualMachineSnapshot
+	// +optional
+	Annotations map[string]string `json:"annotations,omitempty"`
+
+	// DeletionPolicy defines what to do with the VirtualMachineSnapshotContent
+	// when the VirtualMachineSnapshot is deleted
+	// +optional
+	DeletionPolicy *DeletionPolicy `json:"deletionPolicy,omitempty"`
+
+	// FailureDeadline is the time limit for a snapshot to complete.
+	// If not specified, defaults to 5 minutes.
+	// +optional
+	FailureDeadline *metav1.Duration `json:"failureDeadline,omitempty"`
+}
+
+// ScheduleFailurePolicy defines how to handle snapshot failures
+type ScheduleFailurePolicy string
+
+const (
+	// ScheduleFailurePolicyContinue continues with the next scheduled snapshot
+	// even if the previous one failed
+	ScheduleFailurePolicyContinue ScheduleFailurePolicy = "Continue"
+
+	// ScheduleFailurePolicyPause pauses the schedule when a snapshot fails
+	// until the user manually resumes it
+	ScheduleFailurePolicyPause ScheduleFailurePolicy = "Pause"
+)
+
+// VirtualMachineSnapshotSchedulePhase is the current phase of the schedule
+type VirtualMachineSnapshotSchedulePhase string
+
+const (
+	// SchedulePhaseActive indicates the schedule is active and taking snapshots
+	SchedulePhaseActive VirtualMachineSnapshotSchedulePhase = "Active"
+
+	// SchedulePhasePaused indicates the schedule is paused (disabled or due to failure)
+	SchedulePhasePaused VirtualMachineSnapshotSchedulePhase = "Paused"
+
+	// SchedulePhaseFailed indicates the schedule has encountered an error
+	SchedulePhaseFailed VirtualMachineSnapshotSchedulePhase = "Failed"
+)
+
+// VirtualMachineSnapshotScheduleStatus is the status for a VirtualMachineSnapshotSchedule
+type VirtualMachineSnapshotScheduleStatus struct {
+	// Phase is the current phase of the schedule
+	// +optional
+	Phase VirtualMachineSnapshotSchedulePhase `json:"phase,omitempty"`
+
+	// LastSnapshotTime is the time when the last snapshot was taken
+	// +optional
+	// +nullable
+	LastSnapshotTime *metav1.Time `json:"lastSnapshotTime,omitempty"`
+
+	// NextSnapshotTime is the time when the next snapshot is scheduled
+	// +optional
+	// +nullable
+	NextSnapshotTime *metav1.Time `json:"nextSnapshotTime,omitempty"`
+
+	// LastSuccessfulSnapshotName is the name of the last successfully completed snapshot
+	// +optional
+	LastSuccessfulSnapshotName string `json:"lastSuccessfulSnapshotName,omitempty"`
+
+	// CurrentSnapshotCount is the current number of snapshots managed by this schedule
+	// per each VM when using VMSelector, or total when using Source
+	// +optional
+	CurrentSnapshotCount int32 `json:"currentSnapshotCount,omitempty"`
+
+	// Error contains the last error encountered by the controller
+	// +optional
+	Error *Error `json:"error,omitempty"`
+
+	// Conditions represent the latest available observations of the schedule's state
+	// +optional
+	// +listType=atomic
+	Conditions []Condition `json:"conditions,omitempty"`
+
+	// VMSnapshotStatuses contains the status of snapshots per VM when using VMSelector
+	// +optional
+	// +listType=atomic
+	VMSnapshotStatuses []VMSnapshotStatus `json:"vmSnapshotStatuses,omitempty"`
+}
+
+// VMSnapshotStatus contains snapshot status for a specific VM
+type VMSnapshotStatus struct {
+	// VMName is the name of the VirtualMachine
+	VMName string `json:"vmName"`
+
+	// LastSnapshotName is the name of the last snapshot taken for this VM
+	// +optional
+	LastSnapshotName string `json:"lastSnapshotName,omitempty"`
+
+	// LastSnapshotTime is when the last snapshot was taken for this VM
+	// +optional
+	// +nullable
+	LastSnapshotTime *metav1.Time `json:"lastSnapshotTime,omitempty"`
+
+	// CurrentSnapshotCount is the current number of snapshots for this VM
+	// +optional
+	CurrentSnapshotCount int32 `json:"currentSnapshotCount,omitempty"`
+
+	// Error contains any error for this VM's snapshots
+	// +optional
+	Error *Error `json:"error,omitempty"`
+}
+
+// VirtualMachineSnapshotScheduleList is a list of VirtualMachineSnapshotSchedule resources
+// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
+type VirtualMachineSnapshotScheduleList struct {
+	metav1.TypeMeta `json:",inline"`
+	metav1.ListMeta `json:"metadata"`
+
+	Items []VirtualMachineSnapshotSchedule `json:"items"`
+}

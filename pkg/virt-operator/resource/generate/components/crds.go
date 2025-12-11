@@ -65,6 +65,7 @@ var (
 	VIRTUALMACHINEPOOL               = "virtualmachinepools." + poolv1beta1.SchemeGroupVersion.Group
 	VIRTUALMACHINESNAPSHOT           = "virtualmachinesnapshots." + snapshotv1beta1.SchemeGroupVersion.Group
 	VIRTUALMACHINESNAPSHOTCONTENT    = "virtualmachinesnapshotcontents." + snapshotv1beta1.SchemeGroupVersion.Group
+	VIRTUALMACHINESNAPSHOTSCHEDULE   = "virtualmachinesnapshotschedules." + snapshotv1beta1.SchemeGroupVersion.Group
 	VIRTUALMACHINEEXPORT             = "virtualmachineexports." + exportv1beta1.SchemeGroupVersion.Group
 	MIGRATIONPOLICY                  = "migrationpolicies." + migrationsv1.MigrationPolicyKind.Group
 	VIRTUALMACHINECLONE              = "virtualmachineclones." + clone.GroupName
@@ -600,6 +601,61 @@ func NewVirtualMachineRestoreCrd() (*extv1.CustomResourceDefinition, error) {
 		{Name: "TargetName", Type: "string", JSONPath: ".spec.target.name"},
 		{Name: "Complete", Type: "boolean", JSONPath: ".status.complete"},
 		{Name: "RestoreTime", Type: "date", JSONPath: ".status.restoreTime"},
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	if err = patchValidationForAllVersions(crd); err != nil {
+		return nil, err
+	}
+	return crd, nil
+}
+
+func NewVirtualMachineSnapshotScheduleCrd() (*extv1.CustomResourceDefinition, error) {
+	crd := newBlankCrd()
+
+	crd.ObjectMeta.Name = "virtualmachinesnapshotschedules." + snapshotv1beta1.SchemeGroupVersion.Group
+	crd.Spec = extv1.CustomResourceDefinitionSpec{
+		Group: snapshotv1beta1.SchemeGroupVersion.Group,
+		Versions: []extv1.CustomResourceDefinitionVersion{
+			{
+				Name:    snapshotv1alpha1.SchemeGroupVersion.Version,
+				Served:  true,
+				Storage: false,
+				Subresources: &extv1.CustomResourceSubresources{
+					Status: &extv1.CustomResourceSubresourceStatus{},
+				},
+			},
+			{
+				Name:    snapshotv1beta1.SchemeGroupVersion.Version,
+				Served:  true,
+				Storage: true,
+				Subresources: &extv1.CustomResourceSubresources{
+					Status: &extv1.CustomResourceSubresourceStatus{},
+				},
+			},
+		},
+		Scope: "Namespaced",
+		Conversion: &extv1.CustomResourceConversion{
+			Strategy: extv1.NoneConverter,
+		},
+		Names: extv1.CustomResourceDefinitionNames{
+			Plural:     "virtualmachinesnapshotschedules",
+			Singular:   "virtualmachinesnapshotschedule",
+			Kind:       "VirtualMachineSnapshotSchedule",
+			ShortNames: []string{"vmsnapshotschedule", "vmsnapshotschedules"},
+			Categories: []string{
+				"all",
+			},
+		},
+	}
+	err := addFieldsToAllVersions(crd, []extv1.CustomResourceColumnDefinition{
+		{Name: "Schedule", Type: "string", JSONPath: ".spec.schedule"},
+		{Name: "Phase", Type: "string", JSONPath: phaseJSONPath},
+		{Name: "Disabled", Type: "boolean", JSONPath: ".spec.disabled"},
+		{Name: "LastSnapshot", Type: "date", JSONPath: ".status.lastSnapshotTime"},
+		{Name: "NextSnapshot", Type: "date", JSONPath: ".status.nextSnapshotTime"},
 	})
 	if err != nil {
 		return nil, err

@@ -65,6 +65,7 @@ type KubevirtClient interface {
 	VirtualMachineSnapshot(namespace string) snapshotv1.VirtualMachineSnapshotInterface
 	VirtualMachineSnapshotContent(namespace string) snapshotv1.VirtualMachineSnapshotContentInterface
 	VirtualMachineRestore(namespace string) snapshotv1.VirtualMachineRestoreInterface
+	VirtualMachineSnapshotSchedule(namespace string) snapshotv1.VirtualMachineSnapshotScheduleInterface
 	VirtualMachineExport(namespace string) exportv1.VirtualMachineExportInterface
 	VirtualMachineInstancetype(namespace string) instancetypev1beta1.VirtualMachineInstancetypeInterface
 	VirtualMachineClusterInstancetype() instancetypev1beta1.VirtualMachineClusterInstancetypeInterface
@@ -181,6 +182,10 @@ func (k kubevirtClient) VirtualMachineSnapshotContent(namespace string) snapshot
 
 func (k kubevirtClient) VirtualMachineRestore(namespace string) snapshotv1.VirtualMachineRestoreInterface {
 	return k.generatedKubeVirtClient.SnapshotV1beta1().VirtualMachineRestores(namespace)
+}
+
+func (k kubevirtClient) VirtualMachineSnapshotSchedule(namespace string) snapshotv1.VirtualMachineSnapshotScheduleInterface {
+	return k.generatedKubeVirtClient.SnapshotV1beta1().VirtualMachineSnapshotSchedules(namespace)
 }
 
 func (k kubevirtClient) VirtualMachineExport(namespace string) exportv1.VirtualMachineExportInterface {

@@ -757,6 +757,19 @@ func (f *kubeInformerFactory) VirtualMachineRestore() cache.SharedIndexInformer 
 	})
 }
 
+func GetVirtualMachineSnapshotScheduleInformerIndexers() cache.Indexers {
+	return cache.Indexers{
+		cache.NamespaceIndex: cache.MetaNamespaceIndexFunc,
+	}
+}
+
+func (f *kubeInformerFactory) VirtualMachineSnapshotSchedule() cache.SharedIndexInformer {
+	return f.getInformer("vmSnapshotScheduleInformer", func() cache.SharedIndexInformer {
+		lw := cache.NewListWatchFromClient(f.clientSet.GeneratedKubeVirtClient().SnapshotV1beta1().RESTClient(), "virtualmachinesnapshotschedules", k8sv1.NamespaceAll, fields.Everything())
+		return cache.NewSharedIndexInformer(lw, &snapshotv1.VirtualMachineSnapshotSchedule{}, f.defaultResync, GetVirtualMachineSnapshotScheduleInformerIndexers())
+	})
+}
+
 func (f *kubeInformerFactory) MigrationPolicy() cache.SharedIndexInformer {
 	return f.getInformer("migrationPolicyInformer", func() cache.SharedIndexInformer {
 		lw := cache.NewListWatchFromClient(f.clientSet.GeneratedKubeVirtClient().MigrationsV1alpha1().RESTClient(), migrations.ResourceMigrationPolicies, k8sv1.NamespaceAll, fields.Everything())

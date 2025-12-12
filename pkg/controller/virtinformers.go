@@ -142,6 +142,9 @@ type KubeInformerFactory interface {
 	// Watches VirtualMachineRestore objects
 	VirtualMachineRestore() cache.SharedIndexInformer
 
+	// Watches VirtualMachineSnapshotSchedule objects
+	VirtualMachineSnapshotSchedule() cache.SharedIndexInformer
+
 	// Watches MigrationPolicy objects
 	MigrationPolicy() cache.SharedIndexInformer
 

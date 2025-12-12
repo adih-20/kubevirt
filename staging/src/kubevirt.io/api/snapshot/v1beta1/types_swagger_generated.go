@@ -190,3 +190,72 @@ func (VirtualMachineRestoreList) SwaggerDoc() map[string]string {
 		"": "VirtualMachineRestoreList is a list of VirtualMachineRestore resources\n+k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object",
 	}
 }
+
+func (VirtualMachineSnapshotSchedule) SwaggerDoc() map[string]string {
+	return map[string]string{
+		"":       "VirtualMachineSnapshotSchedule defines a schedule for taking snapshots of VirtualMachines\n+genclient\n+k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object",
+		"status": "+optional",
+	}
+}
+
+func (VirtualMachineSnapshotScheduleSpec) SwaggerDoc() map[string]string {
+	return map[string]string{
+		"":                 "VirtualMachineSnapshotScheduleSpec is the spec for a VirtualMachineSnapshotSchedule resource",
+		"source":           "Source is the TypedLocalObjectReference of the VirtualMachine to snapshot.\nIf specified, takes precedence over VMSelector.\n+optional",
+		"vmSelector":       "VMSelector is a LabelSelector to select VirtualMachines to snapshot.\nMultiple VMs can be selected using this field.\n+optional",
+		"schedule":         "Schedule defines the cron expression for when snapshots should be taken.\nThe schedule is interpreted with respect to the UTC timezone.\nSupports standard cron expressions and pre-defined shortcuts:\n@hourly, @daily, @weekly, @monthly, @yearly",
+		"disabled":         "Disabled when set to true makes the schedule inactive\n+optional",
+		"retention":        "Retention defines the policy for retaining snapshots\n+optional",
+		"snapshotTemplate": "SnapshotTemplate contains settings for the VirtualMachineSnapshots that are created\n+optional",
+		"failurePolicy":    "FailurePolicy defines how to handle snapshot failures\n+optional",
+	}
+}
+
+func (VirtualMachineSnapshotScheduleRetention) SwaggerDoc() map[string]string {
+	return map[string]string{
+		"":         "VirtualMachineSnapshotScheduleRetention defines the retention policy for scheduled snapshots",
+		"expires":  "Expires is the length of time a snapshot should be retained.\nFormat is a duration string (e.g., \"168h\" for 1 week, \"720h\" for 30 days).\nWhen both Expires and MaxCount are set, snapshots are deleted when either\ncondition is met.\n+optional",
+		"maxCount": "MaxCount is the maximum number of snapshots to retain per VirtualMachine.\nWhen this limit is reached, the oldest snapshot will be deleted.\nWhen both Expires and MaxCount are set, snapshots are deleted when either\ncondition is met.\n+optional",
+	}
+}
+
+func (VirtualMachineSnapshotTemplateSpec) SwaggerDoc() map[string]string {
+	return map[string]string{
+		"":                "VirtualMachineSnapshotTemplateSpec contains settings for snapshots created by the schedule",
+		"labels":          "Labels to add to each VirtualMachineSnapshot\n+optional",
+		"annotations":     "Annotations to add to each VirtualMachineSnapshot\n+optional",
+		"deletionPolicy":  "DeletionPolicy defines what to do with the VirtualMachineSnapshotContent\nwhen the VirtualMachineSnapshot is deleted\n+optional",
+		"failureDeadline": "FailureDeadline is the time limit for a snapshot to complete.\nIf not specified, defaults to 5 minutes.\n+optional",
+	}
+}
+
+func (VirtualMachineSnapshotScheduleStatus) SwaggerDoc() map[string]string {
+	return map[string]string{
+		"":                           "VirtualMachineSnapshotScheduleStatus is the status for a VirtualMachineSnapshotSchedule",
+		"phase":                      "Phase is the current phase of the schedule\n+optional",
+		"lastSnapshotTime":           "LastSnapshotTime is the time when the last snapshot was taken\n+optional\n+nullable",
+		"nextSnapshotTime":           "NextSnapshotTime is the time when the next snapshot is scheduled\n+optional\n+nullable",
+		"lastSuccessfulSnapshotName": "LastSuccessfulSnapshotName is the name of the last successfully completed snapshot\n+optional",
+		"currentSnapshotCount":       "CurrentSnapshotCount is the current number of snapshots managed by this schedule\nper each VM when using VMSelector, or total when using Source\n+optional",
+		"error":                      "Error contains the last error encountered by the controller\n+optional",
+		"conditions":                 "Conditions represent the latest available observations of the schedule's state\n+optional\n+listType=atomic",
+		"vmSnapshotStatuses":         "VMSnapshotStatuses contains the status of snapshots per VM when using VMSelector\n+optional\n+listType=atomic",
+	}
+}
+
+func (VMSnapshotStatus) SwaggerDoc() map[string]string {
+	return map[string]string{
+		"":                     "VMSnapshotStatus contains snapshot status for a specific VM",
+		"vmName":               "VMName is the name of the VirtualMachine",
+		"lastSnapshotName":     "LastSnapshotName is the name of the last snapshot taken for this VM\n+optional",
+		"lastSnapshotTime":     "LastSnapshotTime is when the last snapshot was taken for this VM\n+optional\n+nullable",
+		"currentSnapshotCount": "CurrentSnapshotCount is the current number of snapshots for this VM\n+optional",
+		"error":                "Error contains any error for this VM's snapshots\n+optional",
+	}
+}
+
+func (VirtualMachineSnapshotScheduleList) SwaggerDoc() map[string]string {
+	return map[string]string{
+		"": "VirtualMachineSnapshotScheduleList is a list of VirtualMachineSnapshotSchedule resources\n+k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object",
+	}
+}

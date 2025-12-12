@@ -1395,6 +1395,20 @@ func (mr *MockKubevirtClientMockRecorder) VirtualMachineSnapshotContent(namespac
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VirtualMachineSnapshotContent", reflect.TypeOf((*MockKubevirtClient)(nil).VirtualMachineSnapshotContent), namespace)
 }
 
+// VirtualMachineSnapshotSchedule mocks base method.
+func (m *MockKubevirtClient) VirtualMachineSnapshotSchedule(namespace string) v1beta121.VirtualMachineSnapshotScheduleInterface {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "VirtualMachineSnapshotSchedule", namespace)
+	ret0, _ := ret[0].(v1beta121.VirtualMachineSnapshotScheduleInterface)
+	return ret0
+}
+
+// VirtualMachineSnapshotSchedule indicates an expected call of VirtualMachineSnapshotSchedule.
+func (mr *MockKubevirtClientMockRecorder) VirtualMachineSnapshotSchedule(namespace any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "VirtualMachineSnapshotSchedule", reflect.TypeOf((*MockKubevirtClient)(nil).VirtualMachineSnapshotSchedule), namespace)
+}
+
 // MockVirtualMachineInstanceInterface is a mock of VirtualMachineInstanceInterface interface.
 type MockVirtualMachineInstanceInterface struct {
 	ctrl     *gomock.Controller

@@ -1,90 +1,18 @@
-# Example VirtualMachineSnapshotSchedule
-#
-# This example creates a snapshot schedule that takes daily snapshots
-# of a specific VirtualMachine and retains the last 7 snapshots.
-#
-apiVersion: snapshot.kubevirt.io/v1beta1
+---
+apiVersion: snapshot.kubevirt.io/v1alpha1
 kind: VirtualMachineSnapshotSchedule
 metadata:
   name: daily-backup
-  namespace: default
 spec:
-  # Target a specific VM by name
+  retention:
+    maxCount: 7
+  schedule: 0 0 * * *
+  snapshotTemplate:
+    annotations:
+      description: Daily backup snapshot
+    labels:
+      backup-type: daily
   source:
     apiGroup: kubevirt.io
     kind: VirtualMachine
     name: my-vm
-  
-  # Daily snapshots at midnight UTC
-  schedule: "0 0 * * *"
-  
-  # Retention policy: keep last 7 snapshots
-  retention:
-    maxCount: 7
-  
-  # Optional: template for created snapshots
-  snapshotTemplate:
-    labels:
-      backup-type: daily
-    annotations:
-      description: "Daily backup snapshot"
----
-# Example with label selector (select multiple VMs)
-apiVersion: snapshot.kubevirt.io/v1beta1
-kind: VirtualMachineSnapshotSchedule
-metadata:
-  name: hourly-backup-production
-  namespace: default
-spec:
-  # Select VMs by label
-  vmSelector:
-    matchLabels:
-      environment: production
-      backup-policy: hourly
-  
-  # Hourly snapshots
-  schedule: "@hourly"
-  
-  # Retention: keep snapshots for 1 week or max 168 snapshots (whichever comes first)
-  retention:
-    expires: "168h"  # 1 week
-    maxCount: 168
-  
-  snapshotTemplate:
-    labels:
-      backup-type: hourly
-    deletionPolicy: Delete
----
-# Example with weekly snapshots using cron shortcut
-apiVersion: snapshot.kubevirt.io/v1beta1
-kind: VirtualMachineSnapshotSchedule
-metadata:
-  name: weekly-backup
-  namespace: default
-spec:
-  source:
-    apiGroup: kubevirt.io
-    kind: VirtualMachine
-    name: database-vm
-  
-  # Weekly snapshots (at midnight on Sunday)
-  schedule: "@weekly"
-  
-  retention:
-    # Keep 4 weekly snapshots (1 month of backups)
-    maxCount: 4
-    # Or expire after 30 days
-    expires: "720h"  # 30 days
-  
-  snapshotTemplate:
-    labels:
-      backup-type: weekly
-    annotations:
-      purpose: "Weekly database backup"
-    # Keep snapshot content even if the snapshot is deleted
-    deletionPolicy: Retain
-    # Allow up to 10 minutes for the snapshot to complete
-    failureDeadline: 10m
-  
-  # Pause the schedule if a snapshot fails
-  failurePolicy: Pause

@@ -38,6 +38,7 @@ import (
 	v1 "kubevirt.io/api/core/v1"
 	instancetypev1beta1 "kubevirt.io/api/instancetype/v1beta1"
 	poolv1 "kubevirt.io/api/pool/v1beta1"
+	snapshotv1alpha1 "kubevirt.io/api/snapshot/v1alpha1"
 	cdiv1 "kubevirt.io/containerized-data-importer-api/pkg/apis/core/v1beta1"
 
 	"kubevirt.io/kubevirt/pkg/pointer"
@@ -107,6 +108,7 @@ const (
 	VMPriorityClass                  = "vm-priorityclass"
 	VmCirrosSata                     = "vm-cirros-sata"
 	VmCirrosWithHookSidecarConfigMap = "vm-cirros-with-sidecar-hook-configmap"
+	VmSnapshotSchedule               = "vm-snapshot-schedule"
 )
 
 const VmiReplicaSetCirros = "vmi-replicaset-cirros"
@@ -1295,4 +1297,35 @@ func makeMigratable(vmi *v1.VirtualMachineInstance) {
 	// the pod network and that would make the VMI non-migratable. Therefore, adding a network.
 	vmi.Spec.Networks = []v1.Network{*v1.DefaultPodNetwork()}
 	vmi.Spec.Domain.Devices.Interfaces = []v1.Interface{*v1.DefaultMasqueradeNetworkInterface()}
+}
+
+func GetVmSnapshotSchedule() *snapshotv1alpha1.VirtualMachineSnapshotSchedule {
+	return &snapshotv1alpha1.VirtualMachineSnapshotSchedule{
+		TypeMeta: metav1.TypeMeta{
+			APIVersion: snapshotv1alpha1.SchemeGroupVersion.String(),
+			Kind:       "VirtualMachineSnapshotSchedule",
+		},
+		ObjectMeta: metav1.ObjectMeta{
+			Name: "daily-backup",
+		},
+		Spec: snapshotv1alpha1.VirtualMachineSnapshotScheduleSpec{
+			Source: &k8sv1.TypedLocalObjectReference{
+				APIGroup: pointer.P("kubevirt.io"),
+				Kind:     "VirtualMachine",
+				Name:     "my-vm",
+			},
+			Schedule: "0 0 * * *",
+			Retention: &snapshotv1alpha1.VirtualMachineSnapshotScheduleRetention{
+				MaxCount: pointer.P(int32(7)),
+			},
+			SnapshotTemplate: &snapshotv1alpha1.VirtualMachineSnapshotTemplateSpec{
+				Labels: map[string]string{
+					"backup-type": "daily",
+				},
+				Annotations: map[string]string{
+					"description": "Daily backup snapshot",
+				},
+			},
+		},
+	}
 }

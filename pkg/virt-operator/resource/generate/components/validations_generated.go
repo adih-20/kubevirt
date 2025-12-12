@@ -31472,4 +31472,266 @@ var CRDsValidation map[string]string = map[string]string{
   - spec
   type: object
 `,
+	"virtualmachinesnapshotschedule": `openAPIV3Schema:
+  description: VirtualMachineSnapshotSchedule defines a schedule for taking snapshots
+    of VirtualMachines
+  properties:
+    apiVersion:
+      description: |-
+        APIVersion defines the versioned schema of this representation of an object.
+        Servers should convert recognized schemas to the latest internal value, and
+        may reject unrecognized values.
+        More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+      type: string
+    kind:
+      description: |-
+        Kind is a string value representing the REST resource this object represents.
+        Servers may infer this from the endpoint the client submits requests to.
+        Cannot be updated.
+        In CamelCase.
+        More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+      type: string
+    metadata:
+      type: object
+    spec:
+      description: VirtualMachineSnapshotScheduleSpec is the spec for a VirtualMachineSnapshotSchedule
+        resource
+      properties:
+        disabled:
+          description: Disabled when set to true makes the schedule inactive
+          type: boolean
+        failurePolicy:
+          description: FailurePolicy defines how to handle snapshot failures
+          type: string
+        retention:
+          description: Retention defines the policy for retaining snapshots
+          properties:
+            expires:
+              description: |-
+                Expires is the length of time a snapshot should be retained.
+                Format is a duration string (e.g., "168h" for 1 week, "720h" for 30 days).
+                When both Expires and MaxCount are set, snapshots are deleted when either
+                condition is met.
+              type: string
+            maxCount:
+              description: |-
+                MaxCount is the maximum number of snapshots to retain per VirtualMachine.
+                When this limit is reached, the oldest snapshot will be deleted.
+                When both Expires and MaxCount are set, snapshots are deleted when either
+                condition is met.
+              format: int32
+              type: integer
+          type: object
+        schedule:
+          description: |-
+            Schedule defines the cron expression for when snapshots should be taken.
+            The schedule is interpreted with respect to the UTC timezone.
+            Supports standard cron expressions and pre-defined shortcuts:
+            @hourly, @daily, @weekly, @monthly, @yearly
+          type: string
+        snapshotTemplate:
+          description: SnapshotTemplate contains settings for the VirtualMachineSnapshots
+            that are created
+          properties:
+            annotations:
+              additionalProperties:
+                type: string
+              description: Annotations to add to each VirtualMachineSnapshot
+              type: object
+            deletionPolicy:
+              description: |-
+                DeletionPolicy defines what to do with the VirtualMachineSnapshotContent
+                when the VirtualMachineSnapshot is deleted
+              type: string
+            failureDeadline:
+              description: |-
+                FailureDeadline is the time limit for a snapshot to complete.
+                If not specified, defaults to 5 minutes.
+              type: string
+            labels:
+              additionalProperties:
+                type: string
+              description: Labels to add to each VirtualMachineSnapshot
+              type: object
+          type: object
+        source:
+          description: |-
+            Source is the TypedLocalObjectReference of the VirtualMachine to snapshot.
+            If specified, takes precedence over VMSelector.
+          properties:
+            apiGroup:
+              description: |-
+                APIGroup is the group for the resource being referenced.
+                If APIGroup is not specified, the specified Kind must be in the core API group.
+                For any other third-party types, APIGroup is required.
+              type: string
+            kind:
+              description: Kind is the type of resource being referenced
+              type: string
+            name:
+              description: Name is the name of resource being referenced
+              type: string
+          required:
+          - kind
+          - name
+          type: object
+          x-kubernetes-map-type: atomic
+        vmSelector:
+          description: |-
+            VMSelector is a LabelSelector to select VirtualMachines to snapshot.
+            Multiple VMs can be selected using this field.
+          properties:
+            matchExpressions:
+              description: matchExpressions is a list of label selector requirements.
+                The requirements are ANDed.
+              items:
+                description: |-
+                  A label selector requirement is a selector that contains values, a key, and an operator that
+                  relates the key and values.
+                properties:
+                  key:
+                    description: key is the label key that the selector applies to.
+                    type: string
+                  operator:
+                    description: |-
+                      operator represents a key's relationship to a set of values.
+                      Valid operators are In, NotIn, Exists and DoesNotExist.
+                    type: string
+                  values:
+                    description: |-
+                      values is an array of string values. If the operator is In or NotIn,
+                      the values array must be non-empty. If the operator is Exists or DoesNotExist,
+                      the values array must be empty. This array is replaced during a strategic
+                      merge patch.
+                    items:
+                      type: string
+                    type: array
+                    x-kubernetes-list-type: atomic
+                required:
+                - key
+                - operator
+                type: object
+              type: array
+              x-kubernetes-list-type: atomic
+            matchLabels:
+              additionalProperties:
+                type: string
+              description: |-
+                matchLabels is a map of {key,value} pairs. A single {key,value} in the matchLabels
+                map is equivalent to an element of matchExpressions, whose key field is "key", the
+                operator is "In", and the values array contains only "value". The requirements are ANDed.
+              type: object
+          type: object
+          x-kubernetes-map-type: atomic
+      required:
+      - schedule
+      type: object
+    status:
+      description: VirtualMachineSnapshotScheduleStatus is the status for a VirtualMachineSnapshotSchedule
+      properties:
+        conditions:
+          description: Conditions represent the latest available observations of the
+            schedule's state
+          items:
+            description: Condition defines conditions
+            properties:
+              lastProbeTime:
+                format: date-time
+                nullable: true
+                type: string
+              lastTransitionTime:
+                format: date-time
+                nullable: true
+                type: string
+              message:
+                type: string
+              reason:
+                type: string
+              status:
+                type: string
+              type:
+                description: ConditionType is the const type for Conditions
+                type: string
+            required:
+            - status
+            - type
+            type: object
+          type: array
+          x-kubernetes-list-type: atomic
+        currentSnapshotCount:
+          description: |-
+            CurrentSnapshotCount is the current number of snapshots managed by this schedule
+            per each VM when using VMSelector, or total when using Source
+          format: int32
+          type: integer
+        error:
+          description: Error contains the last error encountered by the controller
+          properties:
+            message:
+              type: string
+            time:
+              format: date-time
+              type: string
+          type: object
+        lastSnapshotTime:
+          description: LastSnapshotTime is the time when the last snapshot was taken
+          format: date-time
+          nullable: true
+          type: string
+        lastSuccessfulSnapshotName:
+          description: LastSuccessfulSnapshotName is the name of the last successfully
+            completed snapshot
+          type: string
+        nextSnapshotTime:
+          description: NextSnapshotTime is the time when the next snapshot is scheduled
+          format: date-time
+          nullable: true
+          type: string
+        phase:
+          description: Phase is the current phase of the schedule
+          type: string
+        vmSnapshotStatuses:
+          description: VMSnapshotStatuses contains the status of snapshots per VM
+            when using VMSelector
+          items:
+            description: VMSnapshotStatus contains snapshot status for a specific
+              VM
+            properties:
+              currentSnapshotCount:
+                description: CurrentSnapshotCount is the current number of snapshots
+                  for this VM
+                format: int32
+                type: integer
+              error:
+                description: Error contains any error for this VM's snapshots
+                properties:
+                  message:
+                    type: string
+                  time:
+                    format: date-time
+                    type: string
+                type: object
+              lastSnapshotName:
+                description: LastSnapshotName is the name of the last snapshot taken
+                  for this VM
+                type: string
+              lastSnapshotTime:
+                description: LastSnapshotTime is when the last snapshot was taken
+                  for this VM
+                format: date-time
+                nullable: true
+                type: string
+              vmName:
+                description: VMName is the name of the VirtualMachine
+                type: string
+            required:
+            - vmName
+            type: object
+          type: array
+          x-kubernetes-list-type: atomic
+      type: object
+  required:
+  - spec
+  type: object
+`,
 }

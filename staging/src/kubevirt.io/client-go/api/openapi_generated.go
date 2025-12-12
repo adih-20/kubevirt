@@ -691,6 +691,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubevirt.io/api/snapshot/v1alpha1.SnapshotVolumesLists":                                          schema_kubevirtio_api_snapshot_v1alpha1_SnapshotVolumesLists(ref),
 		"kubevirt.io/api/snapshot/v1alpha1.SourceIndication":                                              schema_kubevirtio_api_snapshot_v1alpha1_SourceIndication(ref),
 		"kubevirt.io/api/snapshot/v1alpha1.SourceSpec":                                                    schema_kubevirtio_api_snapshot_v1alpha1_SourceSpec(ref),
+		"kubevirt.io/api/snapshot/v1alpha1.VMSnapshotStatus":                                              schema_kubevirtio_api_snapshot_v1alpha1_VMSnapshotStatus(ref),
 		"kubevirt.io/api/snapshot/v1alpha1.VirtualMachine":                                                schema_kubevirtio_api_snapshot_v1alpha1_VirtualMachine(ref),
 		"kubevirt.io/api/snapshot/v1alpha1.VirtualMachineRestore":                                         schema_kubevirtio_api_snapshot_v1alpha1_VirtualMachineRestore(ref),
 		"kubevirt.io/api/snapshot/v1alpha1.VirtualMachineRestoreList":                                     schema_kubevirtio_api_snapshot_v1alpha1_VirtualMachineRestoreList(ref),
@@ -702,8 +703,14 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubevirt.io/api/snapshot/v1alpha1.VirtualMachineSnapshotContentSpec":                             schema_kubevirtio_api_snapshot_v1alpha1_VirtualMachineSnapshotContentSpec(ref),
 		"kubevirt.io/api/snapshot/v1alpha1.VirtualMachineSnapshotContentStatus":                           schema_kubevirtio_api_snapshot_v1alpha1_VirtualMachineSnapshotContentStatus(ref),
 		"kubevirt.io/api/snapshot/v1alpha1.VirtualMachineSnapshotList":                                    schema_kubevirtio_api_snapshot_v1alpha1_VirtualMachineSnapshotList(ref),
+		"kubevirt.io/api/snapshot/v1alpha1.VirtualMachineSnapshotSchedule":                                schema_kubevirtio_api_snapshot_v1alpha1_VirtualMachineSnapshotSchedule(ref),
+		"kubevirt.io/api/snapshot/v1alpha1.VirtualMachineSnapshotScheduleList":                            schema_kubevirtio_api_snapshot_v1alpha1_VirtualMachineSnapshotScheduleList(ref),
+		"kubevirt.io/api/snapshot/v1alpha1.VirtualMachineSnapshotScheduleRetention":                       schema_kubevirtio_api_snapshot_v1alpha1_VirtualMachineSnapshotScheduleRetention(ref),
+		"kubevirt.io/api/snapshot/v1alpha1.VirtualMachineSnapshotScheduleSpec":                            schema_kubevirtio_api_snapshot_v1alpha1_VirtualMachineSnapshotScheduleSpec(ref),
+		"kubevirt.io/api/snapshot/v1alpha1.VirtualMachineSnapshotScheduleStatus":                          schema_kubevirtio_api_snapshot_v1alpha1_VirtualMachineSnapshotScheduleStatus(ref),
 		"kubevirt.io/api/snapshot/v1alpha1.VirtualMachineSnapshotSpec":                                    schema_kubevirtio_api_snapshot_v1alpha1_VirtualMachineSnapshotSpec(ref),
 		"kubevirt.io/api/snapshot/v1alpha1.VirtualMachineSnapshotStatus":                                  schema_kubevirtio_api_snapshot_v1alpha1_VirtualMachineSnapshotStatus(ref),
+		"kubevirt.io/api/snapshot/v1alpha1.VirtualMachineSnapshotTemplateSpec":                            schema_kubevirtio_api_snapshot_v1alpha1_VirtualMachineSnapshotTemplateSpec(ref),
 		"kubevirt.io/api/snapshot/v1alpha1.VolumeBackup":                                                  schema_kubevirtio_api_snapshot_v1alpha1_VolumeBackup(ref),
 		"kubevirt.io/api/snapshot/v1alpha1.VolumeRestore":                                                 schema_kubevirtio_api_snapshot_v1alpha1_VolumeRestore(ref),
 		"kubevirt.io/api/snapshot/v1alpha1.VolumeSnapshotStatus":                                          schema_kubevirtio_api_snapshot_v1alpha1_VolumeSnapshotStatus(ref),
@@ -713,6 +720,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubevirt.io/api/snapshot/v1beta1.SnapshotVolumesLists":                                           schema_kubevirtio_api_snapshot_v1beta1_SnapshotVolumesLists(ref),
 		"kubevirt.io/api/snapshot/v1beta1.SourceIndication":                                               schema_kubevirtio_api_snapshot_v1beta1_SourceIndication(ref),
 		"kubevirt.io/api/snapshot/v1beta1.SourceSpec":                                                     schema_kubevirtio_api_snapshot_v1beta1_SourceSpec(ref),
+		"kubevirt.io/api/snapshot/v1beta1.VMSnapshotStatus":                                               schema_kubevirtio_api_snapshot_v1beta1_VMSnapshotStatus(ref),
 		"kubevirt.io/api/snapshot/v1beta1.VirtualMachine":                                                 schema_kubevirtio_api_snapshot_v1beta1_VirtualMachine(ref),
 		"kubevirt.io/api/snapshot/v1beta1.VirtualMachineRestore":                                          schema_kubevirtio_api_snapshot_v1beta1_VirtualMachineRestore(ref),
 		"kubevirt.io/api/snapshot/v1beta1.VirtualMachineRestoreList":                                      schema_kubevirtio_api_snapshot_v1beta1_VirtualMachineRestoreList(ref),
@@ -724,8 +732,14 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"kubevirt.io/api/snapshot/v1beta1.VirtualMachineSnapshotContentSpec":                              schema_kubevirtio_api_snapshot_v1beta1_VirtualMachineSnapshotContentSpec(ref),
 		"kubevirt.io/api/snapshot/v1beta1.VirtualMachineSnapshotContentStatus":                            schema_kubevirtio_api_snapshot_v1beta1_VirtualMachineSnapshotContentStatus(ref),
 		"kubevirt.io/api/snapshot/v1beta1.VirtualMachineSnapshotList":                                     schema_kubevirtio_api_snapshot_v1beta1_VirtualMachineSnapshotList(ref),
+		"kubevirt.io/api/snapshot/v1beta1.VirtualMachineSnapshotSchedule":                                 schema_kubevirtio_api_snapshot_v1beta1_VirtualMachineSnapshotSchedule(ref),
+		"kubevirt.io/api/snapshot/v1beta1.VirtualMachineSnapshotScheduleList":                             schema_kubevirtio_api_snapshot_v1beta1_VirtualMachineSnapshotScheduleList(ref),
+		"kubevirt.io/api/snapshot/v1beta1.VirtualMachineSnapshotScheduleRetention":                        schema_kubevirtio_api_snapshot_v1beta1_VirtualMachineSnapshotScheduleRetention(ref),
+		"kubevirt.io/api/snapshot/v1beta1.VirtualMachineSnapshotScheduleSpec":                             schema_kubevirtio_api_snapshot_v1beta1_VirtualMachineSnapshotScheduleSpec(ref),
+		"kubevirt.io/api/snapshot/v1beta1.VirtualMachineSnapshotScheduleStatus":                           schema_kubevirtio_api_snapshot_v1beta1_VirtualMachineSnapshotScheduleStatus(ref),
 		"kubevirt.io/api/snapshot/v1beta1.VirtualMachineSnapshotSpec":                                     schema_kubevirtio_api_snapshot_v1beta1_VirtualMachineSnapshotSpec(ref),
 		"kubevirt.io/api/snapshot/v1beta1.VirtualMachineSnapshotStatus":                                   schema_kubevirtio_api_snapshot_v1beta1_VirtualMachineSnapshotStatus(ref),
+		"kubevirt.io/api/snapshot/v1beta1.VirtualMachineSnapshotTemplateSpec":                             schema_kubevirtio_api_snapshot_v1beta1_VirtualMachineSnapshotTemplateSpec(ref),
 		"kubevirt.io/api/snapshot/v1beta1.VolumeBackup":                                                   schema_kubevirtio_api_snapshot_v1beta1_VolumeBackup(ref),
 		"kubevirt.io/api/snapshot/v1beta1.VolumeRestore":                                                  schema_kubevirtio_api_snapshot_v1beta1_VolumeRestore(ref),
 		"kubevirt.io/api/snapshot/v1beta1.VolumeRestoreOverride":                                          schema_kubevirtio_api_snapshot_v1beta1_VolumeRestoreOverride(ref),
@@ -33111,6 +33125,56 @@ func schema_kubevirtio_api_snapshot_v1alpha1_SourceSpec(ref common.ReferenceCall
 	}
 }
 
+func schema_kubevirtio_api_snapshot_v1alpha1_VMSnapshotStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "VMSnapshotStatus contains snapshot status for a specific VM",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"vmName": {
+						SchemaProps: spec.SchemaProps{
+							Description: "VMName is the name of the VirtualMachine",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"lastSnapshotName": {
+						SchemaProps: spec.SchemaProps{
+							Description: "LastSnapshotName is the name of the last snapshot taken for this VM",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"lastSnapshotTime": {
+						SchemaProps: spec.SchemaProps{
+							Description: "LastSnapshotTime is when the last snapshot was taken for this VM",
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Time"),
+						},
+					},
+					"currentSnapshotCount": {
+						SchemaProps: spec.SchemaProps{
+							Description: "CurrentSnapshotCount is the current number of snapshots for this VM",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"error": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Error contains any error for this VM's snapshots",
+							Ref:         ref("kubevirt.io/api/snapshot/v1alpha1.Error"),
+						},
+					},
+				},
+				Required: []string{"vmName"},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Time", "kubevirt.io/api/snapshot/v1alpha1.Error"},
+	}
+}
+
 func schema_kubevirtio_api_snapshot_v1alpha1_VirtualMachine(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -33634,6 +33698,284 @@ func schema_kubevirtio_api_snapshot_v1alpha1_VirtualMachineSnapshotList(ref comm
 	}
 }
 
+func schema_kubevirtio_api_snapshot_v1alpha1_VirtualMachineSnapshotSchedule(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "VirtualMachineSnapshotSchedule defines a schedule for taking snapshots of VirtualMachines",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
+						},
+					},
+					"spec": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("kubevirt.io/api/snapshot/v1alpha1.VirtualMachineSnapshotScheduleSpec"),
+						},
+					},
+					"status": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubevirt.io/api/snapshot/v1alpha1.VirtualMachineSnapshotScheduleStatus"),
+						},
+					},
+				},
+				Required: []string{"spec"},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "kubevirt.io/api/snapshot/v1alpha1.VirtualMachineSnapshotScheduleSpec", "kubevirt.io/api/snapshot/v1alpha1.VirtualMachineSnapshotScheduleStatus"},
+	}
+}
+
+func schema_kubevirtio_api_snapshot_v1alpha1_VirtualMachineSnapshotScheduleList(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "VirtualMachineSnapshotScheduleList is a list of VirtualMachineSnapshotSchedule resources",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"),
+						},
+					},
+					"items": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kubevirt.io/api/snapshot/v1alpha1.VirtualMachineSnapshotSchedule"),
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"metadata", "items"},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta", "kubevirt.io/api/snapshot/v1alpha1.VirtualMachineSnapshotSchedule"},
+	}
+}
+
+func schema_kubevirtio_api_snapshot_v1alpha1_VirtualMachineSnapshotScheduleRetention(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "VirtualMachineSnapshotScheduleRetention defines the retention policy for scheduled snapshots",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"expires": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Expires is the length of time a snapshot should be retained. Format is a duration string (e.g., \"168h\" for 1 week, \"720h\" for 30 days). When both Expires and MaxCount are set, snapshots are deleted when either condition is met.",
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Duration"),
+						},
+					},
+					"maxCount": {
+						SchemaProps: spec.SchemaProps{
+							Description: "MaxCount is the maximum number of snapshots to retain per VirtualMachine. When this limit is reached, the oldest snapshot will be deleted. When both Expires and MaxCount are set, snapshots are deleted when either condition is met.",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Duration"},
+	}
+}
+
+func schema_kubevirtio_api_snapshot_v1alpha1_VirtualMachineSnapshotScheduleSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "VirtualMachineSnapshotScheduleSpec is the spec for a VirtualMachineSnapshotSchedule resource",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"source": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Source is the TypedLocalObjectReference of the VirtualMachine to snapshot. If specified, takes precedence over VMSelector.",
+							Ref:         ref("k8s.io/api/core/v1.TypedLocalObjectReference"),
+						},
+					},
+					"vmSelector": {
+						SchemaProps: spec.SchemaProps{
+							Description: "VMSelector is a LabelSelector to select VirtualMachines to snapshot. Multiple VMs can be selected using this field.",
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.LabelSelector"),
+						},
+					},
+					"schedule": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Schedule defines the cron expression for when snapshots should be taken. The schedule is interpreted with respect to the UTC timezone. Supports standard cron expressions and pre-defined shortcuts: @hourly, @daily, @weekly, @monthly, @yearly",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"disabled": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Disabled when set to true makes the schedule inactive",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"retention": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Retention defines the policy for retaining snapshots",
+							Ref:         ref("kubevirt.io/api/snapshot/v1alpha1.VirtualMachineSnapshotScheduleRetention"),
+						},
+					},
+					"snapshotTemplate": {
+						SchemaProps: spec.SchemaProps{
+							Description: "SnapshotTemplate contains settings for the VirtualMachineSnapshots that are created",
+							Ref:         ref("kubevirt.io/api/snapshot/v1alpha1.VirtualMachineSnapshotTemplateSpec"),
+						},
+					},
+					"failurePolicy": {
+						SchemaProps: spec.SchemaProps{
+							Description: "FailurePolicy defines how to handle snapshot failures",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"schedule"},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/api/core/v1.TypedLocalObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.LabelSelector", "kubevirt.io/api/snapshot/v1alpha1.VirtualMachineSnapshotScheduleRetention", "kubevirt.io/api/snapshot/v1alpha1.VirtualMachineSnapshotTemplateSpec"},
+	}
+}
+
+func schema_kubevirtio_api_snapshot_v1alpha1_VirtualMachineSnapshotScheduleStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "VirtualMachineSnapshotScheduleStatus is the status for a VirtualMachineSnapshotSchedule",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"phase": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Phase is the current phase of the schedule",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"lastSnapshotTime": {
+						SchemaProps: spec.SchemaProps{
+							Description: "LastSnapshotTime is the time when the last snapshot was taken",
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Time"),
+						},
+					},
+					"nextSnapshotTime": {
+						SchemaProps: spec.SchemaProps{
+							Description: "NextSnapshotTime is the time when the next snapshot is scheduled",
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Time"),
+						},
+					},
+					"lastSuccessfulSnapshotName": {
+						SchemaProps: spec.SchemaProps{
+							Description: "LastSuccessfulSnapshotName is the name of the last successfully completed snapshot",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"currentSnapshotCount": {
+						SchemaProps: spec.SchemaProps{
+							Description: "CurrentSnapshotCount is the current number of snapshots managed by this schedule per each VM when using VMSelector, or total when using Source",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"error": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Error contains the last error encountered by the controller",
+							Ref:         ref("kubevirt.io/api/snapshot/v1alpha1.Error"),
+						},
+					},
+					"conditions": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "Conditions represent the latest available observations of the schedule's state",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kubevirt.io/api/snapshot/v1alpha1.Condition"),
+									},
+								},
+							},
+						},
+					},
+					"vmSnapshotStatuses": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "VMSnapshotStatuses contains the status of snapshots per VM when using VMSelector",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kubevirt.io/api/snapshot/v1alpha1.VMSnapshotStatus"),
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Time", "kubevirt.io/api/snapshot/v1alpha1.Condition", "kubevirt.io/api/snapshot/v1alpha1.Error", "kubevirt.io/api/snapshot/v1alpha1.VMSnapshotStatus"},
+	}
+}
+
 func schema_kubevirtio_api_snapshot_v1alpha1_VirtualMachineSnapshotSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -33770,6 +34112,66 @@ func schema_kubevirtio_api_snapshot_v1alpha1_VirtualMachineSnapshotStatus(ref co
 		},
 		Dependencies: []string{
 			"k8s.io/apimachinery/pkg/apis/meta/v1.Time", "kubevirt.io/api/snapshot/v1alpha1.Condition", "kubevirt.io/api/snapshot/v1alpha1.Error", "kubevirt.io/api/snapshot/v1alpha1.SnapshotVolumesLists", "kubevirt.io/api/snapshot/v1alpha1.SourceIndication"},
+	}
+}
+
+func schema_kubevirtio_api_snapshot_v1alpha1_VirtualMachineSnapshotTemplateSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "VirtualMachineSnapshotTemplateSpec contains settings for snapshots created by the schedule",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"labels": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Labels to add to each VirtualMachineSnapshot",
+							Type:        []string{"object"},
+							AdditionalProperties: &spec.SchemaOrBool{
+								Allows: true,
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"annotations": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Annotations to add to each VirtualMachineSnapshot",
+							Type:        []string{"object"},
+							AdditionalProperties: &spec.SchemaOrBool{
+								Allows: true,
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"deletionPolicy": {
+						SchemaProps: spec.SchemaProps{
+							Description: "DeletionPolicy defines what to do with the VirtualMachineSnapshotContent when the VirtualMachineSnapshot is deleted",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"failureDeadline": {
+						SchemaProps: spec.SchemaProps{
+							Description: "FailureDeadline is the time limit for a snapshot to complete. If not specified, defaults to 5 minutes.",
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Duration"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Duration"},
 	}
 }
 
@@ -34092,6 +34494,56 @@ func schema_kubevirtio_api_snapshot_v1beta1_SourceSpec(ref common.ReferenceCallb
 		},
 		Dependencies: []string{
 			"kubevirt.io/api/snapshot/v1beta1.VirtualMachine"},
+	}
+}
+
+func schema_kubevirtio_api_snapshot_v1beta1_VMSnapshotStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "VMSnapshotStatus contains snapshot status for a specific VM",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"vmName": {
+						SchemaProps: spec.SchemaProps{
+							Description: "VMName is the name of the VirtualMachine",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"lastSnapshotName": {
+						SchemaProps: spec.SchemaProps{
+							Description: "LastSnapshotName is the name of the last snapshot taken for this VM",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"lastSnapshotTime": {
+						SchemaProps: spec.SchemaProps{
+							Description: "LastSnapshotTime is when the last snapshot was taken for this VM",
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Time"),
+						},
+					},
+					"currentSnapshotCount": {
+						SchemaProps: spec.SchemaProps{
+							Description: "CurrentSnapshotCount is the current number of snapshots for this VM",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"error": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Error contains any error for this VM's snapshots",
+							Ref:         ref("kubevirt.io/api/snapshot/v1beta1.Error"),
+						},
+					},
+				},
+				Required: []string{"vmName"},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Time", "kubevirt.io/api/snapshot/v1beta1.Error"},
 	}
 }
 
@@ -34680,6 +35132,284 @@ func schema_kubevirtio_api_snapshot_v1beta1_VirtualMachineSnapshotList(ref commo
 	}
 }
 
+func schema_kubevirtio_api_snapshot_v1beta1_VirtualMachineSnapshotSchedule(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "VirtualMachineSnapshotSchedule defines a schedule for taking snapshots of VirtualMachines",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
+						},
+					},
+					"spec": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("kubevirt.io/api/snapshot/v1beta1.VirtualMachineSnapshotScheduleSpec"),
+						},
+					},
+					"status": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("kubevirt.io/api/snapshot/v1beta1.VirtualMachineSnapshotScheduleStatus"),
+						},
+					},
+				},
+				Required: []string{"spec"},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta", "kubevirt.io/api/snapshot/v1beta1.VirtualMachineSnapshotScheduleSpec", "kubevirt.io/api/snapshot/v1beta1.VirtualMachineSnapshotScheduleStatus"},
+	}
+}
+
+func schema_kubevirtio_api_snapshot_v1beta1_VirtualMachineSnapshotScheduleList(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "VirtualMachineSnapshotScheduleList is a list of VirtualMachineSnapshotSchedule resources",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"),
+						},
+					},
+					"items": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kubevirt.io/api/snapshot/v1beta1.VirtualMachineSnapshotSchedule"),
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"metadata", "items"},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta", "kubevirt.io/api/snapshot/v1beta1.VirtualMachineSnapshotSchedule"},
+	}
+}
+
+func schema_kubevirtio_api_snapshot_v1beta1_VirtualMachineSnapshotScheduleRetention(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "VirtualMachineSnapshotScheduleRetention defines the retention policy for scheduled snapshots",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"expires": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Expires is the length of time a snapshot should be retained. Format is a duration string (e.g., \"168h\" for 1 week, \"720h\" for 30 days). When both Expires and MaxCount are set, snapshots are deleted when either condition is met.",
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Duration"),
+						},
+					},
+					"maxCount": {
+						SchemaProps: spec.SchemaProps{
+							Description: "MaxCount is the maximum number of snapshots to retain per VirtualMachine. When this limit is reached, the oldest snapshot will be deleted. When both Expires and MaxCount are set, snapshots are deleted when either condition is met.",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Duration"},
+	}
+}
+
+func schema_kubevirtio_api_snapshot_v1beta1_VirtualMachineSnapshotScheduleSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "VirtualMachineSnapshotScheduleSpec is the spec for a VirtualMachineSnapshotSchedule resource",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"source": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Source is the TypedLocalObjectReference of the VirtualMachine to snapshot. If specified, takes precedence over VMSelector.",
+							Ref:         ref("k8s.io/api/core/v1.TypedLocalObjectReference"),
+						},
+					},
+					"vmSelector": {
+						SchemaProps: spec.SchemaProps{
+							Description: "VMSelector is a LabelSelector to select VirtualMachines to snapshot. Multiple VMs can be selected using this field.",
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.LabelSelector"),
+						},
+					},
+					"schedule": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Schedule defines the cron expression for when snapshots should be taken. The schedule is interpreted with respect to the UTC timezone. Supports standard cron expressions and pre-defined shortcuts: @hourly, @daily, @weekly, @monthly, @yearly",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"disabled": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Disabled when set to true makes the schedule inactive",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"retention": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Retention defines the policy for retaining snapshots",
+							Ref:         ref("kubevirt.io/api/snapshot/v1beta1.VirtualMachineSnapshotScheduleRetention"),
+						},
+					},
+					"snapshotTemplate": {
+						SchemaProps: spec.SchemaProps{
+							Description: "SnapshotTemplate contains settings for the VirtualMachineSnapshots that are created",
+							Ref:         ref("kubevirt.io/api/snapshot/v1beta1.VirtualMachineSnapshotTemplateSpec"),
+						},
+					},
+					"failurePolicy": {
+						SchemaProps: spec.SchemaProps{
+							Description: "FailurePolicy defines how to handle snapshot failures",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"schedule"},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/api/core/v1.TypedLocalObjectReference", "k8s.io/apimachinery/pkg/apis/meta/v1.LabelSelector", "kubevirt.io/api/snapshot/v1beta1.VirtualMachineSnapshotScheduleRetention", "kubevirt.io/api/snapshot/v1beta1.VirtualMachineSnapshotTemplateSpec"},
+	}
+}
+
+func schema_kubevirtio_api_snapshot_v1beta1_VirtualMachineSnapshotScheduleStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "VirtualMachineSnapshotScheduleStatus is the status for a VirtualMachineSnapshotSchedule",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"phase": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Phase is the current phase of the schedule",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"lastSnapshotTime": {
+						SchemaProps: spec.SchemaProps{
+							Description: "LastSnapshotTime is the time when the last snapshot was taken",
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Time"),
+						},
+					},
+					"nextSnapshotTime": {
+						SchemaProps: spec.SchemaProps{
+							Description: "NextSnapshotTime is the time when the next snapshot is scheduled",
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Time"),
+						},
+					},
+					"lastSuccessfulSnapshotName": {
+						SchemaProps: spec.SchemaProps{
+							Description: "LastSuccessfulSnapshotName is the name of the last successfully completed snapshot",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"currentSnapshotCount": {
+						SchemaProps: spec.SchemaProps{
+							Description: "CurrentSnapshotCount is the current number of snapshots managed by this schedule per each VM when using VMSelector, or total when using Source",
+							Type:        []string{"integer"},
+							Format:      "int32",
+						},
+					},
+					"error": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Error contains the last error encountered by the controller",
+							Ref:         ref("kubevirt.io/api/snapshot/v1beta1.Error"),
+						},
+					},
+					"conditions": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "Conditions represent the latest available observations of the schedule's state",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kubevirt.io/api/snapshot/v1beta1.Condition"),
+									},
+								},
+							},
+						},
+					},
+					"vmSnapshotStatuses": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "atomic",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "VMSnapshotStatuses contains the status of snapshots per VM when using VMSelector",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("kubevirt.io/api/snapshot/v1beta1.VMSnapshotStatus"),
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Time", "kubevirt.io/api/snapshot/v1beta1.Condition", "kubevirt.io/api/snapshot/v1beta1.Error", "kubevirt.io/api/snapshot/v1beta1.VMSnapshotStatus"},
+	}
+}
+
 func schema_kubevirtio_api_snapshot_v1beta1_VirtualMachineSnapshotSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -34821,6 +35551,66 @@ func schema_kubevirtio_api_snapshot_v1beta1_VirtualMachineSnapshotStatus(ref com
 		},
 		Dependencies: []string{
 			"k8s.io/apimachinery/pkg/apis/meta/v1.Time", "kubevirt.io/api/snapshot/v1beta1.Condition", "kubevirt.io/api/snapshot/v1beta1.Error", "kubevirt.io/api/snapshot/v1beta1.SnapshotVolumesLists", "kubevirt.io/api/snapshot/v1beta1.SourceIndication"},
+	}
+}
+
+func schema_kubevirtio_api_snapshot_v1beta1_VirtualMachineSnapshotTemplateSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "VirtualMachineSnapshotTemplateSpec contains settings for snapshots created by the schedule",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"labels": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Labels to add to each VirtualMachineSnapshot",
+							Type:        []string{"object"},
+							AdditionalProperties: &spec.SchemaOrBool{
+								Allows: true,
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"annotations": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Annotations to add to each VirtualMachineSnapshot",
+							Type:        []string{"object"},
+							AdditionalProperties: &spec.SchemaOrBool{
+								Allows: true,
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
+					"deletionPolicy": {
+						SchemaProps: spec.SchemaProps{
+							Description: "DeletionPolicy defines what to do with the VirtualMachineSnapshotContent when the VirtualMachineSnapshot is deleted",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"failureDeadline": {
+						SchemaProps: spec.SchemaProps{
+							Description: "FailureDeadline is the time limit for a snapshot to complete. If not specified, defaults to 5 minutes.",
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Duration"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Duration"},
 	}
 }
 

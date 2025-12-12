@@ -38,6 +38,7 @@ import (
 	v1 "kubevirt.io/api/core/v1"
 	instancetypev1beta1 "kubevirt.io/api/instancetype/v1beta1"
 	poolv1 "kubevirt.io/api/pool/v1beta1"
+	snapshotv1alpha1 "kubevirt.io/api/snapshot/v1alpha1"
 
 	resourcev1 "k8s.io/api/resource/v1"
 
@@ -155,6 +156,10 @@ func main() {
 		utils.ResourceClaimTemplatePGPU: utils.GetResourceClaimTemplatePGPU(),
 	}
 
+	var snapshotSchedules = map[string]*snapshotv1alpha1.VirtualMachineSnapshotSchedule{
+		utils.VmSnapshotSchedule: utils.GetVmSnapshotSchedule(),
+	}
+
 	handleError := func(err error) {
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "%s\n", err)
@@ -255,6 +260,10 @@ func main() {
 	}
 
 	for name, obj := range resourceClaimTemplates {
+		handleError(dumpObject(name, *obj))
+	}
+
+	for name, obj := range snapshotSchedules {
 		handleError(dumpObject(name, *obj))
 	}
 }
